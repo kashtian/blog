@@ -1,0 +1,33 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "kashtian blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kashtian/blog.git"
+  },
+  "keywords": [
+    "blog"
+  ],
+  "author": "kash",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kashtian/blog/issues"
+  },
+  "homepage": "https://github.com/kashtian/blog#readme",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "webpack": "^3.3.0"
+  },
+  "dependencies": {
+    "vue": "^2.4.1"
+  }
+}
