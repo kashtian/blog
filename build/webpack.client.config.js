@@ -18,6 +18,10 @@ const baseConfig = {
     publicPath: '/'
   },
 
+  resolve: {
+      extensions: ['.js', '.vue']
+  },
+
   module: {
     rules: [
       {
@@ -56,6 +60,9 @@ if (process.argv.includes('--development')) {
 } else {
   Object.assign(baseConfig, {
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': 'production'
+      }),
       //降低文件大小
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.CommonsChunkPlugin({
