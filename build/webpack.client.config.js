@@ -2,53 +2,31 @@ const path = require('path');
 const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
+const baseConfig = require('./webpack.base.config');
 
-const baseConfig = {
+const clientConfig = Object.assign({}, baseConfig, {
   entry: {
-    app: ['./src/app.js'],
+    app: ['./src/entry-client.js'],
     vendor: [
       'vue',
-      'vue-router'
+      'vue-router',
+      'vuex',
+      'vuex-router-sync'
     ]
   },
 
   output: {
-    path: path.join(process.cwd(), '/dist'),
-    filename: '[name].[hash].js',
-    publicPath: '/'
-  },
-
-  resolve: {
-      extensions: ['.js', '.vue']
-  },
-
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
-          name: 'images/[hash:7].[ext]'
-        }
-      }
-    ]
+    path: path.join(process.cwd(), '/dist/static'),
+    filename: '[name].[chunkhash].js',
+    publicPath: '/static'
   }
-}
+});
 
 if (process.argv.includes('--development')) {
-  baseConfig.entry.app.push('webpack-hot-middleware/client');
+  clientConfig.entry.app.push('webpack-hot-middleware/client');
+  clientConfig.output.filename = '[name].js';
 
-  Object.assign(baseConfig, {
+  Object.assign(clientConfig, {
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
@@ -58,10 +36,10 @@ if (process.argv.includes('--development')) {
     ]
   });
 } else {
-  Object.assign(baseConfig, {
+  Object.assign(clientConfig, {
     plugins: [
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': 'production'
+        'process.env.NODE_ENV': JSON.stringify('production')
       }),
       //降低文件大小
       new webpack.optimize.OccurrenceOrderPlugin(),
@@ -82,4 +60,4 @@ if (process.argv.includes('--development')) {
   });
 }
 
-module.exports = baseConfig;
+module.exports = clientConfig;
