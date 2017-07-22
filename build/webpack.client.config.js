@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
 const baseConfig = require('./webpack.base.config');
+const vueConfig = require('./vue-loader.config');
 
 const clientConfig = Object.assign({}, baseConfig, {
   entry: {
@@ -17,7 +18,7 @@ const clientConfig = Object.assign({}, baseConfig, {
 
   output: {
     path: path.join(process.cwd(), '/dist/static'),
-    filename: '[name].[chunkhash].js',
+    filename: '[name].[chunkhash:7].js',
     publicPath: '/static'
   }
 });
@@ -36,6 +37,13 @@ if (process.argv.includes('--development')) {
     ]
   });
 } else {
+  vueConfig.loaders = {
+    less: extractTextPlugin.extract({
+      use: 'css-loader!less-loader',
+      fallback: 'vue-style-loader'
+    })
+  }
+
   Object.assign(clientConfig, {
     plugins: [
       new webpack.DefinePlugin({
@@ -55,7 +63,7 @@ if (process.argv.includes('--development')) {
       new htmlWebpackPlugin({
         template: './src/index.template.html'
       }),
-      new extractTextPlugin('[name].[contenthash].css')
+      new extractTextPlugin('[name].[contenthash:7].css')
     ]
   });
 }

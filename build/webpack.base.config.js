@@ -1,3 +1,5 @@
+const vueConfig = require('./vue-loader.config');
+
 module.exports = {
     resolve: {
         extensions: ['.js', '.vue']
@@ -7,7 +9,8 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: vueConfig
             },
             {
                 test: /\.js$/,
