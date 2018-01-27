@@ -12,7 +12,8 @@ module.exports = function (app, opts) {
             modules: false,
             children: false,
             chunks: false,
-            chunkModules: false
+            chunkModules: false,
+            colors: true
         }
     })
     app.use(devMiddleware);

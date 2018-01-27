@@ -1,7 +1,6 @@
 <template>
   <div class="test">
     this is home 
-    <router-link to="/resume">简历页面</router-link>
   </div>
 </template>
 
