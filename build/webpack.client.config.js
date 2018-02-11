@@ -26,6 +26,7 @@ const clientConfig = Object.assign({}, baseConfig, {
 if (process.argv.includes('--development')) {
   clientConfig.entry.app.push('webpack-hot-middleware/client');
   clientConfig.output.filename = '[name].js';
+  clientConfig.devtool = 'sourcemap';
 
   Object.assign(clientConfig, {
     plugins: [
@@ -39,7 +40,7 @@ if (process.argv.includes('--development')) {
 } else {
   vueConfig.loaders = {
     less: extractTextPlugin.extract({
-      use: 'css-loader!less-loader',
+      use: 'css-loader!postcss-loader!less-loader',
       fallback: 'vue-style-loader'
     })
   }
