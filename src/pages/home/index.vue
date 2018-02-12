@@ -10,17 +10,16 @@
 
         <section class="container">
             <div class="tip">see my skills</div>
-            <div class="skill-item">
-                <div class="left">
-                    <div class="big-img"></div>
-                    <div class="small-img"></div>
+            <div class="skill-item" v-for="(item, index) in list" :key="item.name">
+                <div :class="{left: index % 2 == 0, right: index % 2 != 0}">
+                    <div :class="[img.type, img.name]"
+                         v-for="img in item.images" :key="img.name">
+                    </div>
                 </div>                
                 <div class="skill-intro">
-                    <div class="name">web网站(SPA)</div>
-                    <div class="detail">
-                        技能：vuejs,css3，webpack<br/>
-                        说明：前端网页采用轻量级框架vue实现，使用webpack打包项目
-                    </div>
+                    <div class="name">{{item.name}}</div>
+                    <div>技能：{{item.skill}}</div>
+                    <div>说明：{{item.desc}}</div>
                 </div>
             </div>
         </section>
@@ -55,32 +54,60 @@
             text-align: center;
         }
         .skill-item {
-            margin-top: 60pr;
+            margin-top: 120pr;
             font-size: 0px;
-            .left {
+            .left, .right {
                 position: relative;
                 display: inline-block;
                 vertical-align: top;
                 width: 1300pr;
                 height: 740pr;
-                margin-right: 100pr;                
-                .big-img {
+                margin-right: 100pr;      
+                font-size: 0px;          
+                .big {
                     width: 1000pr;
                     height: 760pr;
-                    border-radius: 16pr;
-                    background: no-repeat url('../../images/maifangma.png');
+                    border-radius: 16pr;                    
+                    background: no-repeat;
                     background-size: 100% 100%;
                 }
-                .small-img {
+                .small {
                     position: absolute;
                     top: 200pr;
                     right: 0pr;
                     width: 500pr;
                     height: 640pr;
                     border-radius: 16pr;
-                    background: no-repeat url('../../images/chuangjia_mobile.png');
+                    background: no-repeat;
                     background-size: 100% 100%;
                 }
+                .same {
+                    display: inline-block;
+                    width: 500pr;
+                    height: 840pr;
+                    border-radius: 16pr;   
+                    background: no-repeat;
+                    background-size: 100% 100%;
+                    &:first-child {
+                        margin-right: 100pr;
+                    }
+                }
+                .maifangma {                    
+                    background-image: url('../../images/maifangma.png');
+                }
+                .chuangjia-mobile {                    
+                    background-image: url('../../images/chuangjia_mobile.png');
+                }
+                .fangguanjia {
+                    background-image: url('../../images/fangguanjia.png');
+                }
+                .qukuai {
+                    background-image: url('../../images/qukuai.png');
+                }
+            }
+            .right {
+                float: right;                
+                margin: 0px 0px 0px 100pr;   
             }
             .skill-intro {
                 display: inline-block;

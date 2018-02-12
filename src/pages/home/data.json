@@ -1,0 +1,39 @@
+[{
+    "name": "web网站(SPA)",
+    "skill": "vuejs,css3，webpack",
+    "desc": "前端网页采用轻量级框架vue实现，使用webpack打包项目",
+    "images": [
+        {
+            "name": "maifangma",
+            "type": "big"
+        },
+        {
+            "name": "chuangjia-mobile",
+            "type": "small"
+        }
+    ]
+}, {
+    "name": "微信小程序",
+    "skill": "wepy",
+    "desc": "根据小程序文档实现微信小程序功能",
+    "images": [
+        {
+            "name": "fangguanjia",
+            "type": "same"
+        },
+        {
+            "name": "qukuai",
+            "type": "same"
+        }
+    ]
+}, {
+    "name": "网站后台",
+    "skill": "nodejs,express,mysql",
+    "desc": "后端框架采用express构建，数据库使用mysql",
+    "images": null
+}, {
+    "name": "桌面应用程序",
+    "skill": "electron",
+    "desc": "调用electron封装的底层api实现跨平台的桌面应用",
+    "images": null
+}]
