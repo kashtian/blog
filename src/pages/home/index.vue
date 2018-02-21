@@ -4,14 +4,13 @@
             <div class="intro">
                 <div class="title">I AM KASH</div>
                 <div class="small-title">欢迎来到我的主页</div>
-                <div>ui demo: http://demo.cssmoban.com/cssthemes3/ft5_35_hold/index.html</div>
             </div>
         </header>
 
         <section class="container">
             <div class="tip">see my skills</div>
-            <div class="skill-item" v-for="(item, index) in list" :key="item.name">
-                <div :class="{left: index % 2 == 0, right: index % 2 != 0}">
+            <div class="skill-item" :class="{reverse: index % 2 != 0}" v-for="(item, index) in list" :key="item.name">
+                <div class="img-content">
                     <div :class="[img.type, img.name]"
                          v-for="img in item.images" :key="img.name">
                     </div>
@@ -54,15 +53,18 @@
             text-align: center;
         }
         .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
             margin-top: 120pr;
             font-size: 0px;
-            .left, .right {
+            &.reverse {
+                flex-direction: row-reverse;
+            }
+            .img-content {
                 position: relative;
-                display: inline-block;
-                vertical-align: top;
                 width: 1300pr;
-                height: 740pr;
-                margin-right: 100pr;      
+                height: 740pr;    
                 font-size: 0px;          
                 .big {
                     width: 1000pr;
@@ -105,13 +107,7 @@
                     background-image: url('../../images/qukuai.png');
                 }
             }
-            .right {
-                float: right;                
-                margin: 0px 0px 0px 100pr;   
-            }
             .skill-intro {
-                display: inline-block;
-                vertical-align: bottom;
                 width: 600pr;
                 font-size: 36pr;
                 line-height: 80pr;
