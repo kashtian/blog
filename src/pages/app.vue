@@ -1,20 +1,24 @@
 <template>
   <div id="app">
-      <router-view></router-view>
-      
+      <router-view></router-view>      
   </div>
 </template>
 
 <style lang="less">
 html,body {
     margin: 0px;
+    height: 100%;
 }
 
-body {
-    background-image: linear-gradient(90deg, #f58997, #b684f7 15%, #79e6e6 35%, #7fe679 55%, #eae75d 75%, #ea8c5d 90%, #f58997);
-    background-size: 300% 100%;
-    animation: changecolor 120s infinite linear;   
+#app {
+  height: 100%;
 }
+
+// body {
+//     background-image: linear-gradient(90deg, #f58997, #b684f7 15%, #79e6e6 35%, #7fe679 55%, #eae75d 75%, #ea8c5d 90%, #f58997);
+//     background-size: 300% 100%;
+//     animation: changecolor 120s infinite linear;   
+// }
 
 @keyframes changecolor {
     0% {

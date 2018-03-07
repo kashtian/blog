@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import router from './router';
 import store from './store';
-import App from './pages/app';
+import App from './pages/App';
 import { sync } from 'vuex-router-sync';
 
 // this registers `store.state.route`
