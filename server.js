@@ -4,12 +4,14 @@ const express = require('express');
 const serialize = require('serialize-javascript');
 const LRU = require('lru-cache');
 const { createBundleRenderer } = require('vue-server-renderer');
+const apis = require('./api');
 
 const { port } = require('./config/sys.config');
 
 const app = express();
 
 app.use(express.static('public'))
+app.use('/api', apis);
 
 let indexHtml, renderer;
 if (process.argv.includes('--development')) {
