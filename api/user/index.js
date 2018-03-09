@@ -6,6 +6,18 @@ module.exports = {
   },
 
   find() {
-    return User.find({name: 'kash5'})
+    return User.find().where('password').equals('test').select('name')
+  },
+
+  remove() {
+    return User.remove({name: /kash/})
+  },
+
+  update() {
+    return User.update({name: 'kash'}, {password: 'kash321'}, {
+      // 更新时开启验证
+      runValidators: true,
+      multi: true
+    })
   }
 };

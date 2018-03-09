@@ -5,8 +5,8 @@ describe('user model test', () => {
   it.skip('create method', done => {
     user.create({
       body: {
-        name: null,
-        password: 'test'
+        name: 'kash2',
+        password: '123456'
       }
     }).then(() => {
       should.ok(true)
@@ -20,9 +20,9 @@ describe('user model test', () => {
     })
   })
 
-  it('find method', done => {
+  it.skip('find method', done => {
     user.find().then(result => {
-      console.log('find length: ', result.length)
+      console.log('find: ', result)
       should.ok(true)
       return done();
     }).catch(err => {
@@ -33,4 +33,33 @@ describe('user model test', () => {
       return done(err)
     })
   })
+
+  it.skip('remove method', done => {
+    user.remove().then(result => {
+      console.log('remove: ', result)
+      should.ok(true)
+      return done();
+    }).catch(err => {
+      for (let key in err.errors) {
+        console.log(key + ': ', err.errors[key].message)
+      }
+      should.ok(false)
+      return done(err)
+    })
+  })
+
+  it.skip('update method', done => {
+    user.update().then(result => {
+      console.log('update: ', result)
+      should.ok(true)
+      return done();
+    }).catch(err => {
+      for (let key in err.errors) {
+        console.log(key + ': ', err.errors[key].message)
+      }
+      should.ok(false)
+      return done(err)
+    })
+  })
+
 })
