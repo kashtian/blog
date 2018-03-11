@@ -5,10 +5,31 @@ const serialize = require('serialize-javascript');
 const LRU = require('lru-cache');
 const { createBundleRenderer } = require('vue-server-renderer');
 const apis = require('./api');
+const log4js = require('log4js');
+const session = require('express-session');
+const connectRedis = require('connect-redis');
+const bodyParser = require('body-parser');
 
-const { port } = require('./config/sys.config');
+const { port, redisConfig } = require('./config/sys.config');
+
+// init log4js
+log4js.configure('./config/log4js.json');
+const log = log4js.getLogger('app');
 
 const app = express();
+const RedisStore = connectRedis(session);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+app.use(session({
+  name: 'SSID',
+  secret: 'kash-blog',
+  resave: false,
+  saveUninitialized: false,
+  store: new RedisStore(redisConfig)
+}))
 
 app.use(express.static('public'))
 app.use('/api', apis);
@@ -73,9 +94,11 @@ app.get('*', (req, res) => {
 
   stream.on('error', err => {
     if (err && err.code == '404') {
+      log.error('404 error: ', err, req.path);
       res.status(404).end('404 | Page Not Found');
       return;
     }
+    log.error('route error: ', err, req.path);
     res.status(500).end('Internal Error 500');
     console.error(`error during render: ${req.path}`);
     console.error(err);

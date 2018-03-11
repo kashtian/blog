@@ -1,12 +1,13 @@
 const should = require('should');
-const user = require('../api/user'); 
+const { userApi } = require('../api/user'); 
 
-describe('user model test', () => {
-  it.skip('create method', done => {
-    user.create({
+describe('userApi model test', () => {
+  it('create method', done => {
+    userApi.create({
       body: {
         name: 'kash2',
-        password: '123456'
+        password: '123456',
+        email: 'kash@test.mail'
       }
     }).then(() => {
       should.ok(true)
@@ -21,7 +22,7 @@ describe('user model test', () => {
   })
 
   it.skip('find method', done => {
-    user.find().then(result => {
+    userApi.find().then(result => {
       console.log('find: ', result)
       should.ok(true)
       return done();
@@ -35,7 +36,7 @@ describe('user model test', () => {
   })
 
   it.skip('remove method', done => {
-    user.remove().then(result => {
+    userApi.remove().then(result => {
       console.log('remove: ', result)
       should.ok(true)
       return done();
@@ -49,7 +50,7 @@ describe('user model test', () => {
   })
 
   it.skip('update method', done => {
-    user.update().then(result => {
+    userApi.update().then(result => {
       console.log('update: ', result)
       should.ok(true)
       return done();

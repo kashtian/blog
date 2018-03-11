@@ -1,6 +1,6 @@
 const User = require('./user-model');
 
-module.exports = {
+let userApi = {
   create(req) {
     return User.create(req.body)
   },
@@ -21,3 +21,11 @@ module.exports = {
     })
   }
 };
+
+let routeMap = {
+  
+}
+
+module.exports = {
+  userApi
+}
