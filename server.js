@@ -6,31 +6,23 @@ const LRU = require('lru-cache');
 const { createBundleRenderer } = require('vue-server-renderer');
 const apis = require('./api');
 const log4js = require('log4js');
-const session = require('express-session');
-const connectRedis = require('connect-redis');
 const bodyParser = require('body-parser');
+const { redisAuthFilter } = require('./api/middleware');
 
-const { port, redisConfig } = require('./config/sys.config');
+const { port } = require('./config/sys.config');
 
 // init log4js
 log4js.configure('./config/log4js.json');
 const log = log4js.getLogger('app');
 
 const app = express();
-const RedisStore = connectRedis(session);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
-app.use(session({
-  name: 'SSID',
-  secret: 'kash-blog',
-  resave: false,
-  saveUninitialized: false,
-  store: new RedisStore(redisConfig)
-}))
 
+app.use(redisAuthFilter);
 app.use(express.static('public'))
 app.use('/api', apis);
 
@@ -40,7 +32,7 @@ if (process.argv.includes('--development')) {
     indexUpdated: html => indexHtml = getIndexInfo(html),
     bundleUpdated: bundle => renderer = createRenderer(bundle)
   })
-} else {
+} else if (!process.argv.includes('--test')) {
   indexHtml = getIndexInfo(fs.readFileSync(path.join(process.cwd(), '/dist/static/index.html'), 'utf-8'));
   renderer = createRenderer(fs.readFileSync(path.join(process.cwd(), '/dist/server/server-bundle.js'), 'utf-8'));
   app.use('/static', express.static(path.join(process.cwd(), 'dist/static')));
@@ -106,5 +98,9 @@ app.get('*', (req, res) => {
 })
 
 app.listen(port, () => {
+  log.debug('app debug: ', 'test')
+  log.error('app error: ', 'test')
   console.log(`Listening at http://localhost:${port}`);
 })
+
+module.exports = app;
