@@ -41,14 +41,20 @@ let userApi = {
   },
 
   // 根据ID删除用户
-  delete(req) {
-    return User.remove({
-      '_id': req.body.id
-    }).then(result => {
-      if (result.n < 1) {
-        throw new Error('删除用户失败')
-      }
-    })
+  deleteById(req) {
+    if (!req.body.id) {
+      return Promise.reject({message: '用户ID不能为空'})
+    }
+    return User.findByIdAndRemove(req.body.id)
+      .then(result => {
+        if (!result) {
+          throw new Error('要删除的内容不存在')
+        }
+        if (result.n < 1) {
+          throw new Error('删除用户失败')
+        }
+        return result;
+      })
   }
 
 }

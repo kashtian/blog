@@ -13,7 +13,7 @@ const { port } = require('./config/sys.config');
 
 // init log4js
 log4js.configure('./config/log4js.json');
-const log = log4js.getLogger('app');
+const log = log4js.getLogger('route_error');
 
 const app = express();
 
@@ -86,20 +86,33 @@ app.get('*', (req, res) => {
 
   stream.on('error', err => {
     if (err && err.code == '404') {
-      log.error('404 error: ', err, req.path);
+      log.error(req.path, err.message);
       res.status(404).end('404 | Page Not Found');
       return;
     }
-    log.error('route error: ', err, req.path);
+    log.error(req.path, err.message);
     res.status(500).end('Internal Error 500');
     console.error(`error during render: ${req.path}`);
     console.error(err);
   })
 })
 
+app.use((req, res, next) => {
+  var err = new Error('资源没有找到');
+  err.status = 404;
+  next(err);
+})
+
+app.use((err, req, res, next)=> {
+  log.error(req.path, err.message);
+  res.status(err.status || 500);
+  res.json({
+      code: err.status || 500,
+      msg: err.message || "服务器内部错误"
+  });
+});
+
 app.listen(port, () => {
-  log.debug('app debug: ', 'test')
-  log.error('app error: ', 'test')
   console.log(`Listening at http://localhost:${port}`);
 })
 

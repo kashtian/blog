@@ -15,6 +15,11 @@ export default {
   title: '编辑器',
 
   mounted() {
+    if (!localStorage.token) {
+      this.$router.replace('/login')
+      return;
+    }
+
     Quill = require('quill');
     
     this.initEditor();    

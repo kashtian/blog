@@ -1,4 +1,5 @@
 import { app, router, store } from './app.js';
+import './utils/fetch';
 
 router.beforeEach((to, from, next) => {
   if (window.__INITIAL_STATE__) {

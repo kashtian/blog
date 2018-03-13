@@ -1,9 +1,11 @@
 const express = require('express');
 const { userRouteMap } = require('./user');
+const { articleTypeRouteMap } = require('./article-type')
 
 const router = express.Router();
 
 router.use('/user', createRouter(userRouteMap))
+router.use('/articletype', createRouter(articleTypeRouteMap))
 
 module.exports = router;
 

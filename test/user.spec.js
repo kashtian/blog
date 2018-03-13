@@ -1,6 +1,5 @@
 const should = require('should');
 const request = require('supertest');
-const { userRouteMap } = require('../api/user'); 
 
 describe('userApi model test', () => {
   let server;

@@ -1,6 +1,6 @@
 const redisClient = require('./redis-client');
 
-const authPaths = ['/api/user/add'];
+const authPaths = [];
 
 const redisAuthFilter = (req, res, next) => {
   if (!authPaths.includes(req.path)) {
@@ -9,13 +9,19 @@ const redisAuthFilter = (req, res, next) => {
   } 
   let token = req.get('Authorization');
   if (!token) {
-    res.redirect('/login');
+    res.json({
+      code: 203,
+      msg: '请登录'
+    })
     return;
   }
   redisClient.hgetallAsync(token)
   .then(user => {
     if (!user) {
-      res.redirect('/login');
+      res.json({
+        code: 203,
+        msg: '登录已过期，请重新登录'
+      })
       return;
     }
     req.user = user;

@@ -11,4 +11,4 @@ let typeSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('articleType', typeSchema);
+module.exports = mongoose.model('articletype', typeSchema);
