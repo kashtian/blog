@@ -34,11 +34,12 @@ export default {
         return 
       }
       fetch({
-        url: '/api/user/loginss',
+        url: '/api/user/login',
         data: this.info
       }).then(res => {
         if (res.code == 200) {          
           localStorage.token = res.data;
+          alert('登录成功')
         } else {
           res.msg && alert(res.msg);
         }

@@ -2,7 +2,25 @@
   <div class="editor-page">
     <div id="toolbar"></div>
     <div id="myEditor"></div>
-    <div class="submit" @click="submit">提交</div>
+    <div>
+      <label>标题</label>
+      <input type="text" v-model="info.title" maxlength="50" v-validate:name="errors" tag="标题"/>
+    </div>
+    <div>
+      <label>作者</label>
+      <input type="text" v-model="info.author" maxlength="20" v-validate:name="errors" tag="作者姓名"/>
+    </div>
+    <div>
+      <label>文章类型</label>
+      <select v-model="info.type">
+        <option v-for="item in types" :key="item._id">{{item.name}}</option>
+      </select>
+    </div>
+    <div>
+      <label>发布文章</label>
+      <input type="checkbox" v-model="info.publish" />
+    </div>
+    <button class="submit" @click="submit">提交</button>
   </div>
 </template>
 
@@ -14,6 +32,19 @@ export default {
   path: '/editor',
   title: '编辑器',
 
+  data() {
+    return {
+      info: {
+        author: '',
+        type: '',
+        title: '',
+        publish: false
+      },
+      errors: [],
+      types: []
+    }
+  },
+
   mounted() {
     if (!localStorage.token) {
       this.$router.replace('/login')
@@ -23,9 +54,65 @@ export default {
     Quill = require('quill');
     
     this.initEditor();    
+
+    this.getTypes();
+    this.getUserInfo();
   },
 
   methods: {
+    submit() {  
+      let content = this.myQuill.getText();
+      if (!content) {
+        alert('文章内容不能为空')
+        return;
+      }
+      if (this.errors.length) {
+        alert(this.errors[0]);
+        return;
+      }
+      this.info.content = this.myQuill.container.firstChild.innerHTML;
+
+      fetch({
+        url: '/api/article/add',
+        data: this.info
+      }).then(res => {
+        if (res.code == 200) {
+          alert('添加文章成功')
+        } else {
+          res.msg && alert(res.msg)
+        }
+      })
+    },
+
+    // 获取文章类型列表
+    getTypes() {
+      fetch({
+        url: '/api/articletype/getall'
+      }).then(res => {
+        if (res.code == 200) {
+          this.types = res.data || [];
+          this.types[0] && (this.info.type = this.types[0].name);
+        } else {
+          res.msg && alert(res.msg)
+        }
+      })
+    },
+
+    // 获取用户信息
+    getUserInfo() {
+      fetch({
+        url: '/api/user/info'
+      }).then(res => {
+        if (res.code == 200) {
+          let data = res.data || {};
+          this.info.author = data.name;
+          console.log(this.info.author, data)
+        } else {
+          res.msg && alert(res.msg)
+        }
+      })
+    },
+
     initEditor() {
       let toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -55,10 +142,6 @@ export default {
       })
     },
 
-    submit() {  
-      console.log('contents---->', this.myQuill.container.firstChild.innerHTML)
-    }
-
   }
 }
 </script>
@@ -73,4 +156,3 @@ export default {
   }
 }
 </style>
-

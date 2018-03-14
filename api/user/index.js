@@ -55,6 +55,15 @@ let userApi = {
         }
         return result;
       })
+  },
+
+  // 根据token查询用户信息
+  userInfo(req) {
+    if (req.user) {
+      return Promise.resolve(req.user)
+    } else {
+      return Promise.reject({message: '没有获取到用户信息'})
+    }
   }
 
 }
@@ -64,7 +73,8 @@ module.exports = {
   userRouteMap: {
     'post /login': userApi.login,
     'post /add': userApi.add,
-    'post /delete': userApi.delete
+    'post /delete': userApi.delete,
+    'post /info': userApi.userInfo
   }  
 }
 
