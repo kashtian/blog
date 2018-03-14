@@ -4,7 +4,7 @@
   "description": "kashtian blog",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/article-type.spec.js --recursive --reporter list --test || exit 0",
+    "test": "mocha test/article.spec.js --recursive --reporter list --test || exit 0",
     "dev": "node server --development",
     "build": "rimraf dist && npm run build:client && npm run build:server",
     "build:client": "webpack --config ./build/webpack.client.config.js",

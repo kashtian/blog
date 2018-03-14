@@ -13,7 +13,7 @@ let replierSchema = new mongoose.Schema({
 
 let commentsSchema = new mongoose.Schema({
   articleId: {
-    type: ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     required: [true, '文章id不能为空']
   },
   name: {

@@ -5,13 +5,9 @@ let articleSchema = new mongoose.Schema({
     type: String,
     required: [true, '用户名不能为空']
   },
-  typeId: {
-    type: ObjectId,
-    required: [true, '类别Id不能为空']
-  },
-  typeName: {
+  type: {
     type: String,
-    required: [true, '类别名不能为空']
+    required: [true, '文章类型不能为空']
   },
   title: {
     type: String,

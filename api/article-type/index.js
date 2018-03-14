@@ -19,6 +19,9 @@ let articleTypeApi = {
 
   // 根据id修改类别
   updateById(req) {
+    if (!req.body.id) {
+      return Promise.reject({message: '文章类别ID不能为空'})
+    }
     return ArticleType.findByIdAndUpdate(req.body.id, {
       name: req.body.name
     }, {

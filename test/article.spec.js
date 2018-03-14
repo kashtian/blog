@@ -2,16 +2,19 @@ const should = require('should');
 const request = require('supertest');
 
 // unit test
-describe.skip('articleType test', () => {
-  let articleTypeApi;
+describe.skip('article test', () => {
+  let articleApi;
   before(() => {
-    articleTypeApi = require('../api/article-type').articleTypeApi
+    articleApi = require('../api/article').articleApi
   })  
 
   it.skip('add method', done => {
-    articleTypeApi.add({
+    articleApi.add({
       body: {
-        name: '前端'
+        author: '测试作者',
+        type: '后端',
+        title: '测试文章标题',
+        content: '测试文章内容'
       }
     }).then(res => {
       console.log('add result: ', res)
@@ -24,27 +27,14 @@ describe.skip('articleType test', () => {
     })
   })
 
-  it.skip('getTypes method', done => {
-    articleTypeApi.getTypes()
-    .then(res => {
-      console.log('get types result: ', res)
-      should.ok(true);
-      return done();
-    }).catch(err => {
-      console.log('error: ', err.message)
-      should.ok(false)
-      return done(err)
-    })
-  })
-
   it.skip('updateById method', done => {
-    articleTypeApi.updateById({
+    articleApi.updateById({
       body: {
-        id: '5aa7ac1780b61a1d3b8cb7459',
-        name: '大前端'
+        id: '5aa88e14bfdd6009538932b5',
+        author: '测试作者修改'
       }
     }).then(res => {
-      console.log('update result: ',  res)
+      console.log('updateById result: ', res)
       should.ok(true);
       return done();
     }).catch(err => {
@@ -55,12 +45,31 @@ describe.skip('articleType test', () => {
   })
 
   it.skip('deleteById method', done => {
-    articleTypeApi.deleteById({
+    articleApi.deleteById({
       body: {
-        id: '5aa7a9ea9cf2d51c824435aa'
+        id: '5aa88e14bfdd6009538932b5'
       }
     }).then(res => {
-      console.log('delete result: ',  res)
+      console.log('deleteById result: ', res)
+      should.ok(true);
+      return done();
+    }).catch(err => {
+      console.log('error: ', err.message)
+      should.ok(false)
+      return done(err)
+    })
+  })
+
+  it.skip('getArticles method', done => {
+    articleApi.getArticles({
+      body: {
+        conditions: {
+          author: '测试作者'
+        },
+        limit: 1
+      }
+    }).then(res => {
+      console.log('getArticles result: ', res)
       should.ok(true);
       return done();
     }).catch(err => {
@@ -72,7 +81,7 @@ describe.skip('articleType test', () => {
 })
 
 // route test
-describe('articleType route test', () => {
+describe('aritcle route test', () => {
   let server;
 
   before(() => {
@@ -81,15 +90,15 @@ describe('articleType route test', () => {
     server = request(app);
   })
 
-  it('POST /api/articletype/getall', done => {
-    server.post('/api/articletype/getall')
+  it('POST /api/article/get', done => {
+    server.post('/api/article/get')
       .set('Accept', 'application/json')
       .expect(200)
       .end((err, res) => {
         if (err) {
           return done(err);
         }
-        console.log('getall result: ', res.body);
+        console.log('get result: ', res.body);
         done()
       })
   })
