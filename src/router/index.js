@@ -17,7 +17,7 @@ function routerFactory(modules) {
   for (let key in modules) {
     component = modules[key];
     routes.push({
-      name: component.name + '-router',
+      name: component.name,
       path: component.path,
       component: component,
       meta: {

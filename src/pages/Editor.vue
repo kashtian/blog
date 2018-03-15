@@ -1,26 +1,29 @@
 <template>
   <div class="editor-page">
-    <div id="toolbar"></div>
     <div id="myEditor"></div>
-    <div>
-      <label>标题</label>
-      <va-input v-model="info.title" :attr="{maxlength: 50}" arg="name" :errors="errors" tag="标题" />
+
+    <div class="bottom">
+      <div>
+        <label>标题</label>
+        <va-input v-model="info.title" :attr="{maxlength: 50}" arg="name" :errors="errors" tag="标题" />
+      </div>
+      <div>
+        <label>作者</label>
+        <va-input v-model="info.author" :attr="{maxlength: 20}" arg="name" :errors="errors" tag="作者姓名" />
+      </div>
+      <div>
+        <label>文章类型</label>
+        <select v-model="info.type">
+          <option v-for="item in types" :key="item._id">{{item.name}}</option>
+        </select>
+      </div>
+      <div>
+        <label>发布文章</label>
+        <input type="checkbox" v-model="info.publish" />
+      </div>
+      <button class="submit" @click="submit">提交</button>
     </div>
-    <div>
-      <label>作者</label>
-      <va-input v-model="info.author" :attr="{maxlength: 20}" arg="name" :errors="errors" tag="作者姓名" />
-    </div>
-    <div>
-      <label>文章类型</label>
-      <select v-model="info.type">
-        <option v-for="item in types" :key="item._id">{{item.name}}</option>
-      </select>
-    </div>
-    <div>
-      <label>发布文章</label>
-      <input type="checkbox" v-model="info.publish" />
-    </div>
-    <button class="submit" @click="submit">提交</button>
+
   </div>
 </template>
 
@@ -66,7 +69,7 @@ export default {
 
   methods: {
     submit() {  
-      let content = this.myQuill.getText();
+      let content = this.myQuill.getText().replace(/^\n$/, '');
       if (!content) {
         alert('文章内容不能为空')
         return;
@@ -76,6 +79,7 @@ export default {
         return;
       }
       this.info.content = this.myQuill.container.firstChild.innerHTML;
+      this.info.delta = JSON.stringify(this.myQuill.getContents());
 
       fetch({
         url: '/api/article/add',
@@ -157,7 +161,11 @@ export default {
 .editor-page {
   height: 100%;
   #myEditor {
-    height: 80%;
+    height: 70%;
+  }
+  .bottom {
+    margin-top: 10pr;
+    text-align: center;
   }
 }
 </style>

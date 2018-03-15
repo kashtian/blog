@@ -10,7 +10,7 @@ router.beforeEach((to, from, next) => {
       return c.preFetch({store});
     }
   })).then(() => {    
-    setTitle(to.meta.title);
+    setTitle(to.params.title || to.meta.title);
     next();
   })
 })

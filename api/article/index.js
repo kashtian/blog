@@ -40,7 +40,15 @@ let articleApi = {
 
   // 根据条件返回筛选文章
   getArticles(req) {
-    return Article.find(req.body.conditions).limit(req.body.limit).sort(req.body.sort)
+    return Article.find(req.body.conditions).limit(req.body.limit).sort(req.body.sort || '-updateAt')
+  },
+
+  // 根据ID查找文章
+  getArticleById(req) {
+    if (!req.body.id) {
+      return Promise.reject({message: '文章ID不能为空'})
+    }
+    return Article.findById(req.body.id)
   }
 
 }
@@ -50,6 +58,7 @@ module.exports = {
   articleRouteMap: {
     'post /add': articleApi.add,
     'post /update': articleApi.updateById,
-    'post /get': articleApi.getArticles
+    'post /get': articleApi.getArticles,
+    'post /getById': articleApi.getArticleById
   }
 }
