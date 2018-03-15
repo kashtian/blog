@@ -4,11 +4,11 @@
     <div id="myEditor"></div>
     <div>
       <label>标题</label>
-      <input type="text" v-model="info.title" maxlength="50" v-validate:name="errors" tag="标题"/>
+      <va-input v-model="info.title" :attr="{maxlength: 50}" arg="name" :errors="errors" tag="标题" />
     </div>
     <div>
       <label>作者</label>
-      <input type="text" v-model="info.author" maxlength="20" v-validate:name="errors" tag="作者姓名"/>
+      <va-input v-model="info.author" :attr="{maxlength: 20}" arg="name" :errors="errors" tag="作者姓名" />
     </div>
     <div>
       <label>文章类型</label>
@@ -26,11 +26,16 @@
 
 <script>
 let Quill;
+import { VaInput } from '../components'
 
 export default {
   name: 'editor',
   path: '/editor',
   title: '编辑器',
+
+  components: {
+    VaInput
+  },
 
   data() {
     return {
