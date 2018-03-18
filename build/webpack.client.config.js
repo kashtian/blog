@@ -4,9 +4,8 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
 const baseConfig = require('./webpack.base.config');
 const vueConfig = require('./vue-loader.config');
-const merge = require('webpack-merge')
 
-const clientConfig = merge({}, baseConfig, {
+const clientConfig = Object.assign({}, baseConfig, {
   entry: {
     app: ['./src/entry-client.js'],
     vendor: [
@@ -24,10 +23,12 @@ const clientConfig = merge({}, baseConfig, {
   },
 
   resolve: {
+    extensions: ['.js', '.vue'],
     alias: {
+      '@': path.resolve(__dirname, '../src'),
       'fetch': path.resolve(__dirname, '../src/utils/fetch-client.js')
     }
-  }
+  },
 });
 
 if (process.argv.includes('--development')) {

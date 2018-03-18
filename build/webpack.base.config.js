@@ -2,13 +2,6 @@ const path = require('path');
 const vueConfig = require('./vue-loader.config');
 
 module.exports = {
-    resolve: {
-        extensions: ['.js', '.vue'],
-        alias: {
-            '@': path.resolve(__dirname, '../src')
-        }
-    },
-
     module: {
         rules: [
             {
