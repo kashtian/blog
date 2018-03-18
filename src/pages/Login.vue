@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import fetch from 'fetch'
+
 export default {
   name: 'login',
   path: '/login',

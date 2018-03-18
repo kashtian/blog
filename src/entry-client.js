@@ -1,13 +1,12 @@
 import { app, router, store } from './app.js';
-import './utils/fetch';
 
 router.beforeEach((to, from, next) => {
   if (window.__INITIAL_STATE__) {
     return;
   }
-  Promise.all(router.getMatchedComponents().map(c =>{
-    if (c.preFetch) {
-      return c.preFetch({store});
+  Promise.all(to.matched.map(item => {
+    if (item.components.default.preFetch) {
+      return item.components.default.preFetch(store, to);
     }
   })).then(() => {    
     setTitle(to.params.title || to.meta.title);

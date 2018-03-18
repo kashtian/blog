@@ -6,7 +6,7 @@
         <span>作者：{{article.author}}</span>
         <span class="type">文章分类：{{article.type}}</span>
       </div>
-      <div>更新于：{{article.date}}</div>
+      <div>更新于：{{getDate(article.updateAt)}}</div>
     </div>
     <div class="ql-editor article-content" v-html="article.content"></div>
   </div>
@@ -14,6 +14,7 @@
 
 <script>
 import tools from '@/utils/tools';
+import { mapState } from 'vuex'
 
 export default {
   name: 'article-detail',
@@ -22,30 +23,24 @@ export default {
 
   data() {
     return {
-      article: {}
+      
     }
   },
 
-  mounted() {
-    this.getArticle();
+  computed: {
+    ...mapState({
+      article: state => state.article.info
+    })
+  },
+
+  preFetch(store, route) {
+    return store.dispatch('GET_ARTICLE', route.params)
   },
 
   methods: {
-    getArticle() {
-      fetch({
-        url: '/api/article/getById',
-        data: {
-          id: this.$route.params.id
-        }
-      }).then(res => {
-        if (res.code == 200) {
-          this.article = res.data || {};
-          this.article.date = tools.formatDate(new Date(this.article.updateAt), 'yyyy-MM-dd');
-        } else {
-          res.msg && alert(res.msg)
-        }
-      })
-    }
+    getDate(dateStr) {
+      return tools.formatDate(new Date(dateStr), 'yyyy-MM-dd')
+    },
   }
 }
 </script>

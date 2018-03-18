@@ -1,4 +1,4 @@
-let fetch = window.fetch;
+import 'whatwg-fetch';
 
 const fetchapi = options => {
   return fetch(options.url, {
@@ -13,4 +13,4 @@ const fetchapi = options => {
   })
 }
 
-top.fetch = fetchapi;
+export default fetchapi

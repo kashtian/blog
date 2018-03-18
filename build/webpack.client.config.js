@@ -4,8 +4,9 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const extractTextPlugin = require('extract-text-webpack-plugin');
 const baseConfig = require('./webpack.base.config');
 const vueConfig = require('./vue-loader.config');
+const merge = require('webpack-merge')
 
-const clientConfig = Object.assign({}, baseConfig, {
+const clientConfig = merge({}, baseConfig, {
   entry: {
     app: ['./src/entry-client.js'],
     vendor: [
@@ -20,6 +21,12 @@ const clientConfig = Object.assign({}, baseConfig, {
     path: path.join(process.cwd(), '/dist/static'),
     filename: '[name].[chunkhash:7].js',
     publicPath: '/static/'
+  },
+
+  resolve: {
+    alias: {
+      'fetch': path.resolve(__dirname, '../src/utils/fetch-client.js')
+    }
   }
 });
 

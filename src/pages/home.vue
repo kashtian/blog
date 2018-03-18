@@ -19,6 +19,7 @@
 
 <script>
 import tools from '@/utils/tools';
+import { mapState } from 'vuex'
 
 export default {
   name: 'home',
@@ -27,27 +28,21 @@ export default {
 
   data() {
     return {
-      articles: []
+      
     }
   },
 
-  mounted() {
-    this.getArticles()
+  computed: {
+    ...mapState({
+      articles: state => state.articles
+    })
+  },
+
+  preFetch(store, route) {
+    return store.dispatch('GET_ALL_ARTICLES', route.params)
   },
 
   methods: {
-    getArticles() {
-      fetch({
-        url: '/api/article/get'
-      }).then(res => {
-        if (res.code == 200) {
-          this.articles = res.data;
-        } else {
-          res.msg && alert(res.msg)
-        }
-      })
-    },
-
     getDate(dateStr) {
       return tools.formatDate(new Date(dateStr), 'yyyy年MM月dd日')
     },
@@ -72,7 +67,7 @@ export default {
         color: #fff;        
         font-size: 40pr;
         text-align: center;
-        background: no-repeat center url('../../images/yourname_bg.jpg');
+        background: no-repeat center url('../images/yourname_bg.jpg');
         background-size: 100%;
         .intro {
             height: 100%;

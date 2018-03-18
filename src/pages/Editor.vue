@@ -9,7 +9,7 @@
       </div>
       <div>
         <label>作者</label>
-        <va-input v-model="info.author" :attr="{maxlength: 20}" arg="name" :errors="errors" tag="作者姓名" />
+        <va-input :readonly="true" v-model="info.author" :attr="{maxlength: 20}" arg="name" :errors="errors" tag="作者姓名" />
       </div>
       <div>
         <label>文章类型</label>
@@ -30,6 +30,7 @@
 <script>
 let Quill;
 import { VaInput } from '../components'
+import fetch from 'fetch'
 
 export default {
   name: 'editor',
@@ -115,7 +116,6 @@ export default {
         if (res.code == 200) {
           let data = res.data || {};
           this.info.author = data.name;
-          console.log(this.info.author, data)
         } else {
           res.msg && alert(res.msg)
         }
