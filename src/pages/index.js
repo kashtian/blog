@@ -4,6 +4,7 @@ import Editor from './Editor';
 import Login from './Login'
 import NotFound from './Not-found';
 import Article from './article'
+import My from './my'
 
 export default {
   Home,
@@ -11,5 +12,6 @@ export default {
   Editor,
   Login,
   NotFound,
-  Article
+  Article,
+  My
 }

@@ -31,10 +31,11 @@
 let Quill;
 import { VaInput } from '../components'
 import fetch from 'fetch'
+import { mapState } from 'vuex'
 
 export default {
   name: 'editor',
-  path: '/editor',
+  path: '/editor/:id?',
   title: '编辑器',
 
   components: {
@@ -60,16 +61,26 @@ export default {
       return;
     }
 
-    Quill = require('quill');
-    
-    this.initEditor();    
+    Quill = require('quill');    
+    this.initEditor(); 
+
+    if (this.$route.params.id) {
+      this.$store.dispatch('GET_ARTICLE', this.$route.params)
+        .then(info => {
+          if (info) {
+            this.info = info;
+            this.myQuill.setContents(info.delta)
+          }
+        })
+    } else {
+      this.getUserInfo();
+    }
 
     this.getTypes();
-    this.getUserInfo();
   },
 
   methods: {
-    submit() {  
+    submit() {
       let content = this.myQuill.getText().replace(/^\n$/, '');
       if (!content) {
         alert('文章内容不能为空')
@@ -80,8 +91,16 @@ export default {
         return;
       }
       this.info.content = this.myQuill.container.firstChild.innerHTML;
-      this.info.delta = JSON.stringify(this.myQuill.getContents());
+      this.info.delta = this.myQuill.getContents();
 
+      if (this.$route.params.id) {
+        this.update()
+      } else {
+        this.add()
+      }
+    },
+
+    add() {
       fetch({
         url: '/api/article/add',
         data: this.info
@@ -94,14 +113,28 @@ export default {
       })
     },
 
+    update() {
+      this.info.id = this.info._id
+      fetch({
+        url: '/api/article/update',
+        data: this.info
+      }).then(res => {
+        if (res.code == 200) {
+          alert('修改文章成功')
+        } else {
+          res.msg && alert(res.msg)
+        }
+      })
+    },
+
     // 获取文章类型列表
     getTypes() {
       fetch({
         url: '/api/articletype/getall'
       }).then(res => {
         if (res.code == 200) {
-          this.types = res.data || [];
-          this.types[0] && (this.info.type = this.types[0].name);
+          this.types = res.data || [];          
+          (this.types[0] && !this.info.type) && (this.info.type = this.types[0].name);
         } else {
           res.msg && alert(res.msg)
         }

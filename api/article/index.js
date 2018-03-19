@@ -10,6 +10,7 @@ let articleApi = {
     if (!req.body.id) {
       return Promise.reject({message: '文章ID不能为空'})
     }
+    delete req.body._id
     return Article.findByIdAndUpdate(req.body.id, req.body, {
       // 更新时开启验证
       runValidators: true
@@ -49,6 +50,13 @@ let articleApi = {
       return Promise.reject({message: '文章ID不能为空'})
     }
     return Article.findById(req.body.id)
+  },
+
+  // 根据token获取我的所有文章
+  getMyArticles(req) {
+    return Article.find({
+      author: req.user.name
+    }).sort('-updateAt')
   }
 
 }
@@ -59,6 +67,8 @@ module.exports = {
     'post /add': articleApi.add,
     'post /update': articleApi.updateById,
     'post /get': articleApi.getArticles,
-    'post /getById': articleApi.getArticleById
+    'post /getById': articleApi.getArticleById,
+    'post /my': articleApi.getMyArticles,
+    'post /deleteById': articleApi.deleteById
   }
 }

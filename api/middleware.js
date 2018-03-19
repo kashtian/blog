@@ -1,6 +1,6 @@
 const redisClient = require('./redis-client');
 
-const authPaths = ['/api/article/add', '/api/article/update', '/api/user/info'];
+const authPaths = ['/api/article/add', '/api/article/update', '/api/article/my', '/api/article/deleteById', '/api/user/info'];
 
 const redisAuthFilter = (req, res, next) => {
   if (!authPaths.includes(req.path)) {

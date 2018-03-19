@@ -18,7 +18,7 @@ let articleSchema = new mongoose.Schema({
     required: [true, '内容不能为空']
   },
   delta: {
-    type: String,
+    type: Object,
     required: [true, 'delta不能为空']
   },
   publish: {

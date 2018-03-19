@@ -14,7 +14,7 @@ export default {
         }
       }).then(res => {
         if (res.code == 200) {
-          state.info = res.data || {};          
+          return state.info = res.data || {};          
         } else {
           res.msg && console.log(res.msg)
         }

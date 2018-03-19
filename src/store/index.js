@@ -13,12 +13,13 @@ const store = new Vuex.Store({
   },
 
   actions: {
-    GET_ALL_ARTICLES({state}) {
+    GET_ALL_ARTICLES({state}, params) {
       return fetch({
-        url: '/api/article/get'
+        url: '/api/article/get',
+        data: params
       }).then(res => {
         if (res.code == 200) {
-          state.articles = res.data;
+          state.articles = res.data || [];
         } else {
           res.msg && console.log(res.msg)
         }

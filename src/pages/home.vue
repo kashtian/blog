@@ -9,10 +9,13 @@
 
         <section class="article-list">
           <h3>文章列表</h3>
+
           <div v-for="item in articles" :key="item._id" @click="goArticleDetail(item)">
             <span class="date">{{getDate(item.updateAt)}}</span>
             <span>{{item.title}}</span>
           </div>
+
+          <div v-if="articles && !articles.length">暂时没有发表文章</div>
         </section>
     </div>
 </template>
@@ -39,7 +42,11 @@ export default {
   },
 
   preFetch(store, route) {
-    return store.dispatch('GET_ALL_ARTICLES', route.params)
+    return store.dispatch('GET_ALL_ARTICLES', {
+      conditions: {
+        publish: true
+      }
+    })
   },
 
   methods: {

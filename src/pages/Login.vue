@@ -42,6 +42,7 @@ export default {
         if (res.code == 200) {          
           localStorage.token = res.data;
           alert('登录成功')
+          this.$router.push('/my')
         } else {
           res.msg && alert(res.msg);
         }
