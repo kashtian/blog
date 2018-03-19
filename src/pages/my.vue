@@ -8,6 +8,7 @@
         <span>【{{item.type}}】</span>
       </div>
       <div class="operate">
+        <span class="operate-item" @click="toArticle(item)">查看</span>
         <span class="operate-item" @click="toEdit(item)">编辑</span>
         <span class="operate-item" @click="togglePublish(item)">{{item.publish ? '取消发布' : '发布'}}</span>
         <span class="operate-item" @click="deleteById(item, index)">删除</span>
@@ -71,6 +72,11 @@ export default {
           res.msg && alert(res.msg)
         }
       })
+    },
+
+    // 查看文章详情
+    toArticle(item) {
+      this.$router.push(`/articledetail/${item._id}`)
     },
 
     // 跳转文章编辑页面
