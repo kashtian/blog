@@ -20,14 +20,14 @@ html,body {
 //     animation: changecolor 120s infinite linear;   
 // }
 
-@keyframes changecolor {
-    0% {
-        background-position: 0% 0;
-    }
-    100% {
-        background-position: 150% 0;
-    }
-}
+// @keyframes changecolor {
+//     0% {
+//         background-position: 0% 0;
+//     }
+//     100% {
+//         background-position: 150% 0;
+//     }
+// }
 </style>
 
 <script>
