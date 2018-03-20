@@ -96,8 +96,27 @@ export default {
       if (this.$route.params.id) {
         this.update()
       } else {
-        this.add()
+        this.checkTitLe()
       }
+    },
+
+    // 增加文章的时候检查文章标题是否存在
+    checkTitLe() {
+      fetch({
+        url: '/api/article/checkTitle',
+        data: {
+          title: this.info.title
+        }
+      }).then(res => {
+        if (res.data.length > 0) {
+          let dialog = confirm('您已创建过相同标题的文章，仍然继续创建吗？')
+          if (dialog) {
+            this.add();
+          }
+        } else {
+          this.add();
+        }
+      })
     },
 
     add() {

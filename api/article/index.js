@@ -57,6 +57,14 @@ let articleApi = {
     return Article.find({
       author: req.user.name
     }).sort('-updateAt')
+  },
+
+  // 检查该用户是否发布过相同标题的文章
+  checkTitle(req) {
+    return Article.find({
+      author: req.user.name,
+      title: req.body.title
+    }).limit(1).select('title type')
   }
 
 }
@@ -69,6 +77,7 @@ module.exports = {
     'post /get': articleApi.getArticles,
     'post /getById': articleApi.getArticleById,
     'post /my': articleApi.getMyArticles,
-    'post /deleteById': articleApi.deleteById
+    'post /deleteById': articleApi.deleteById,
+    'post /checkTitle': articleApi.checkTitle
   }
 }
