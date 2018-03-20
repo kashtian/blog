@@ -1,6 +1,6 @@
 import { app, router, store } from './app.js';
 
-router.beforeEach((to, from, next) => {
+router.afterEach((to, from) => {
   if (window.__INITIAL_STATE__) {
     return;
   }
@@ -8,9 +8,8 @@ router.beforeEach((to, from, next) => {
     if (item.components.default.preFetch) {
       return item.components.default.preFetch(store, to);
     }
-  })).then(() => {    
+  })).then(() => {
     setTitle(to.params.title || to.meta.title);
-    next();
   })
 })
 
