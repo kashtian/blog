@@ -4,9 +4,9 @@
     <div class="desc">
       <div>
         <span>作者：{{article.author}}</span>
-        <span class="type">文章分类：{{article.type}}</span>
+        <span class="type">【{{article.type}}】</span>
       </div>
-      <div>更新于：{{getDate(article.updateAt)}}</div>
+      <div class="date">{{getDate(article.updateAt)}}</div>
     </div>
     <div class="ql-editor article-content" v-html="article.content"></div>
   </div>
@@ -50,18 +50,19 @@ export default {
 <style lang="less">
 .article-page {
   margin: 0px auto;
-  width: 80%;
   height: 100%;
-  padding: 30pr 60pr;
+  padding: 30pr 10%;
   background-color: #fefae7;
   box-sizing: border-box;
   .article-title {
     text-align: center;
   }
   .desc {
+    margin-bottom: 20pr;
     padding: 10pr 60pr;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 28pr;
     color: #5d5454;
     .type {
@@ -70,6 +71,12 @@ export default {
   }
   .article-content {
     height: auto;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .article-page {
+    padding: 30pr 10pr;
   }
 }
 </style>
