@@ -18,10 +18,12 @@ const store = new Vuex.Store({
         url: '/api/article/get',
         data: params
       }).then(res => {
-        if (res.code == 200) {
-          state.articles = res.data || [];
+        state.articles = res.data || [];
+      }).catch(err => {
+        if (typeof window != 'undefined') {
+          alert(err.message)
         } else {
-          res.msg && console.log(res.msg)
+          console.log(err.message)
         }
       })
     }

@@ -13,11 +13,13 @@ export default {
           id: params.id
         }
       }).then(res => {
-        if (res.code == 200) {
-          return state.info = res.data || {};          
+        return state.info = res.data || {};
+      }).catch(err => {
+        if (typeof window != 'undefined') {
+          alert(err.message)
         } else {
-          res.msg && console.log(res.msg)
-        }
+          console.log(err.message)
+        }        
       })
     }
   }

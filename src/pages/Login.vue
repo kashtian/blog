@@ -39,13 +39,11 @@ export default {
         url: '/api/user/login',
         data: this.info
       }).then(res => {
-        if (res.code == 200) {          
-          localStorage.token = res.data;
-          alert('登录成功')
-          this.$router.push('/my')
-        } else {
-          res.msg && alert(res.msg);
-        }
+        localStorage.token = res.data;
+        alert('登录成功')
+        this.$router.push('/my')
+      }).catch(err => {
+        alert(err.message)
       })
     }
   }

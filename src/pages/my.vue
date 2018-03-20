@@ -42,13 +42,12 @@ export default {
       fetch({
         url: '/api/article/my'
       }).then(res => {
-        if (res.code == 200) {
-          this.articles = res.data || [];
-        } else if (res.code == 203) {
+        this.articles = res.data || [];
+      }).catch(err => {
+        if (err.code == 203) {
           this.$router.push('/login')
-        } else {
-          res.msg && alert(res.msg)
         }
+        alert(err.message)
       })
     },
 
@@ -61,16 +60,14 @@ export default {
           publish: !item.publish
         }
       }).then(res => {
-        if (res.code == 200) {
-          if (item.publish) {
-            alert('文章已取消发布')
-          } else {
-            alert('文章已发布')
-          }
-          item.publish = !item.publish
+        if (item.publish) {
+          alert('文章已取消发布')
         } else {
-          res.msg && alert(res.msg)
+          alert('文章已发布')
         }
+        item.publish = !item.publish
+      }).catch(err => {
+        alert(err.message)
       })
     },
 
@@ -96,12 +93,10 @@ export default {
           id: item._id
         }
       }).then(res => {
-        if (res.code == 200) {
-          this.articles.splice(index, 1)
-          alert('删除成功')
-        } else {
-          res.msg && alert(res.msg)
-        }
+        this.articles.splice(index, 1)
+        alert('删除成功')
+      }).catch(err => {
+        alert(err.message)
       })
     }
   }

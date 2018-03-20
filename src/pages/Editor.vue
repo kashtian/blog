@@ -105,11 +105,9 @@ export default {
         url: '/api/article/add',
         data: this.info
       }).then(res => {
-        if (res.code == 200) {
-          alert('添加文章成功')
-        } else {
-          res.msg && alert(res.msg)
-        }
+        alert('添加文章成功')
+      }).catch(err => {
+        alert(err.message)
       })
     },
 
@@ -119,11 +117,9 @@ export default {
         url: '/api/article/update',
         data: this.info
       }).then(res => {
-        if (res.code == 200) {
-          alert('修改文章成功')
-        } else {
-          res.msg && alert(res.msg)
-        }
+        alert('修改文章成功')
+      }).cath(err => {
+        alert(err.message)
       })
     },
 
@@ -132,12 +128,10 @@ export default {
       fetch({
         url: '/api/articletype/getall'
       }).then(res => {
-        if (res.code == 200) {
-          this.types = res.data || [];          
-          (this.types[0] && !this.info.type) && (this.info.type = this.types[0].name);
-        } else {
-          res.msg && alert(res.msg)
-        }
+        this.types = res.data || [];          
+        (this.types[0] && !this.info.type) && (this.info.type = this.types[0].name);
+      }).catch(err => {
+        alert(err.message)
       })
     },
 
@@ -146,12 +140,10 @@ export default {
       fetch({
         url: '/api/user/info'
       }).then(res => {
-        if (res.code == 200) {
-          let data = res.data || {};
-          this.info.author = data.name;
-        } else {
-          res.msg && alert(res.msg)
-        }
+        let data = res.data || {};
+        this.info.author = data.name;
+      }).catch(err => {
+        alert(err.message)
       })
     },
 

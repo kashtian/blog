@@ -108,7 +108,7 @@ app.use((err, req, res, next)=> {
   res.status(err.status || 500);
   res.json({
       code: err.status || 500,
-      msg: err.message || "服务器内部错误"
+      message: err.message || "服务器内部错误"
   });
 });
 

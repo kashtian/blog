@@ -11,7 +11,7 @@ const redisAuthFilter = (req, res, next) => {
   if (!token) {
     res.json({
       code: 203,
-      msg: '请登录'
+      message: '请登录'
     })
     return;
   }
@@ -20,7 +20,7 @@ const redisAuthFilter = (req, res, next) => {
     if (!user) {
       res.json({
         code: 203,
-        msg: '登录已过期，请重新登录'
+        message: '登录已过期，请重新登录'
       })
       return;
     }

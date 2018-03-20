@@ -25,7 +25,7 @@ function createRouter(map) {
       }).catch(err => {
         res.json({
           code: 100,
-          msg: err.message || ''
+          message: err.message || ''
         })
       })
     })
