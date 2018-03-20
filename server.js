@@ -112,8 +112,12 @@ app.use((err, req, res, next)=> {
   });
 });
 
-app.listen(port, () => {
+let server = app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);
+})
+
+server.on('timeout', err => {
+  log.error('timeout: ', err)
 })
 
 module.exports = app;
