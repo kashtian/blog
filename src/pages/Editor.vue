@@ -137,7 +137,7 @@ export default {
         data: this.info
       }).then(res => {
         alert('修改文章成功')
-      }).cath(err => {
+      }).catch(err => {
         alert(err.message)
       })
     },

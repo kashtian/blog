@@ -107,6 +107,7 @@ export default {
 .my-page {
   padding: 0px 30pr;
   .article-item {
+    margin-top: 20pr;
     display: flex;
     justify-content: space-between;
     width: 80%;
@@ -114,6 +115,15 @@ export default {
   .operate-item {
     margin-right: 20pr;
     text-decoration: underline;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .my-page {
+    .article-item {
+      display: block;
+      width: 100%;
+    }
   }
 }
 </style>
