@@ -81,8 +81,7 @@ export default {
 
   methods: {
     submit() {
-      let content = this.myQuill.getText().replace(/^\n$/, '');
-      if (!content) {
+      if (this.myQuill.getLength() <= 1) {
         alert('文章内容不能为空')
         return;
       }
