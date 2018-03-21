@@ -71,6 +71,9 @@ export default {
   }
   .article-content {
     height: auto;
+    li {
+      margin-bottom: 10pr;
+    }
   }
 }
 
