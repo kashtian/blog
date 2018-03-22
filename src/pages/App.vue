@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-      <router-view></router-view>      
+      <loading /> 
+      <router-view></router-view>
   </div>
 </template>
 
@@ -32,9 +33,14 @@ html,body {
 
 <script>
 import tools from '../utils/tools';
+import { Loading } from '../components'
 
 export default {
     name: 'app',
+
+    components: {
+      Loading
+    },
 
     mounted() {
         if (tools.isIOS() || tools.isAndroid()) {

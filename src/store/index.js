@@ -9,7 +9,8 @@ const store = new Vuex.Store({
   modules: modules,
 
   state: {
-    articles: []
+    articles: [],
+    isLoading: false
   },
 
   actions: {

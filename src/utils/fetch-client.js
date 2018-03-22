@@ -1,7 +1,12 @@
 import axios from 'axios'
+import store from '../store'
+
+let loadingCount = 0;
 
 const fetchapi = options => {
-  return new Promise((resolve, reject) => {
+  loadingCount++
+  store.state.isLoading = true;
+  return new Promise((resolve, reject) => {    
     axios(Object.assign({
       method: 'POST',
       headers: { 
@@ -9,14 +14,25 @@ const fetchapi = options => {
       },
       timeout: 10 * 1000
     }, options)).then(res => {
+      closeLoading()
       if (res.status == 200 && res.data.code == 200) {
         resolve(res.data)
       } 
       reject(res.data)
     }).catch(err => {
+      closeLoading()
       reject(err)
     })
   })  
+}
+
+function closeLoading() {
+  if (loadingCount > 0) {
+    loadingCount--
+  }  
+  if (loadingCount == 0) {
+    store.state.isLoading = false;
+  }
 }
 
 export default fetchapi

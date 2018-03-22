@@ -54,6 +54,7 @@ export default {
   padding: 30pr 10%;
   background-color: #fefae7;
   box-sizing: border-box;
+  overflow: auto;
   .article-title {
     text-align: center;
   }

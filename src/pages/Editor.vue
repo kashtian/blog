@@ -31,7 +31,6 @@
 let Quill;
 import { VaInput } from '../components'
 import fetch from 'fetch'
-import { mapState } from 'vuex'
 
 export default {
   name: 'editor',
