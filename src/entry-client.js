@@ -1,6 +1,6 @@
 import { app, router, store } from './app.js';
 
-router.afterEach((to, from) => {
+router.beforeEach((to, from, next) => {
   if (window.__INITIAL_STATE__) {
     return;
   }
@@ -10,6 +10,7 @@ router.afterEach((to, from) => {
     }
   })).then(() => {
     setTitle(to.params.title || to.meta.title);
+    next()
   })
 })
 
