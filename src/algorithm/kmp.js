@@ -70,7 +70,12 @@ function getIndexs(des, pattern) {
     } else {
       backCount++
       i += j - next[j]
-      j = 0
+      if (next[j] <= 0) {
+        j = 0
+      } else {
+        // 再次优化，当有前缀时，i和j跳过前缀比较前缀后的字符
+        j = next[j]
+      }
     }
   }
   console.log('index backcount-->', backCount)
