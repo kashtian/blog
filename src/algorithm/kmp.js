@@ -1,63 +1,99 @@
+// 此方法不行，比下面的getIndexs方法的循环次数要多
 function kmp(desStr, pattern) {
-    let next = getNext(pattern),
-        i = 0,
-        j = 0,
-        len = desStr.length,
-        jLen = pattern.length,
-        arr = [];
+  let next = getNext(pattern),
+    i = 0,
+    j = 0,
+    len = desStr.length,
+    jLen = pattern.length,
+    arr = [];
+  let count = 0;
+  let backCount = 0
 
-    while(i < len) {
-        if (j > jLen - 1) {
-            arr.push(i - j);
-            j = 0;
-        }
-        if (j == -1 || desStr[i] == pattern[j]) {
-            i++;
-            j++;
-        } else {
-            j = next[j];
-        }
+  while (i < len) {
+    count++
+    if (j == -1 || desStr[i] == pattern[j]) {
+      i++;
+      j++;
+    } else {
+      backCount++
+      j = next[j];
     }
-    return arr;
+    if (j == jLen) {
+      arr.push(i - j);
+      j = 0;
+    }
+  }
+  console.log('kmp backcount-->', backCount)
+  console.log('kmp count-->', count)
+  return arr;
 }
 
-function getNext(str){
-    if (!str) {
-        return;
-    }
-    let len = str.length,
-        next = [-1],
-        k = -1,
-        i = 0;
+function getNext(str) {
+  if (!str) {
+    return;
+  }
+  let len = str.length,
+    next = [-1],
+    k = -1,
+    i = 0;
 
-    while(i < len - 1) {
-        if (k == -1 || str[i] == str[k]) {
-            next[++i] = ++k;
-        } else {
-            k = next[k];
-        }
+  while (i < len - 1) {
+    if (k == -1 || str[i] == str[k]) {
+      next[++i] = ++k;
+    } else {
+      k = next[k];
     }
-    return next;
+  }
+  return next;
 }
 
-// 最初求解next数组的方法
-function getNextOrigin(str) {
-    if (!str) {
-        return;
+// 此方法相较于上面的kmp算法更优，循环次数更少
+function getIndexs(des, pattern) {
+  let next = getNext(pattern)
+  let i = 0;
+  let j = 0;
+  let len = des.length - pattern.length;
+  let plen = pattern.length
+  let indexes = []
+  let count = 0
+  let backCount = 0
+
+  while (i <= len) {
+    count++
+    if (j == plen) {
+      indexes.push(i)
+      j = 0
+      i += plen
     }
-    let len = str.length,
-        next = [0],
-        k = 0;
-    for (let i = 1; i < len; i++) {
-        k = next[i-1];
-        while(str[i] != str[k] && k != 0) {
-            k = next[k - 1];
-        }
-        if (str[i] == str[k]) {
-            next[i] = k + 1;
-        } else {
-            next[i] = 0;
-        }
+    if (des[i + j] == pattern[j]) {
+      j++
+    } else {
+      backCount++
+      i += j - next[j]
+      j = 0
     }
-    return next;
+  }
+  console.log('index backcount-->', backCount)
+  console.log('index count-->', count)
+  return indexes
+}
+
+// 优化后的next数组求解
+function getNext(str) {
+  let k = -1;
+  let next = [-1];
+  let i = 0;
+
+  while (i < str.length - 1) {
+    if (str[i] == str[k] || k == -1) {
+      next[++i] = ++k
+      // 优化
+      if (str[i] == str[k]) {
+        next[i] = next[k]
+      }
+    } else {
+      k = next[k]
+    }
+  }
+  return next;
 }
