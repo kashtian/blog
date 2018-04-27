@@ -1,4 +1,3 @@
-// 此方法不行，比下面的getIndexs方法的循环次数要多
 function kmp(desStr, pattern) {
   let next = getNext(pattern),
     i = 0,
@@ -11,14 +10,18 @@ function kmp(desStr, pattern) {
 
   while (i < len) {
     count++
-    if (j == -1 || desStr[i] == pattern[j]) {
+    if (desStr[i] == pattern[j]) {
       i++;
       j++;
     } else {
       backCount++
       j = next[j];
     }
-    if (j == jLen) {
+    // 将j=-1的情况拆分，避免多次空循环
+    if (j == -1) {
+      i++
+      j++
+    } else if (j == jLen) {
       arr.push(i - j);
       j = 0;
     }
@@ -47,7 +50,6 @@ function getNext(str) {
   return next;
 }
 
-// 此方法相较于上面的kmp算法更优，循环次数更少
 function getIndexs(des, pattern) {
   let next = getNext(pattern)
   let i = 0;
