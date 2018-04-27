@@ -60,11 +60,6 @@ function getIndexs(des, pattern) {
 
   while (i <= len) {
     count++
-    if (j == plen) {
-      indexes.push(i)
-      j = 0
-      i += plen
-    }
     if (des[i + j] == pattern[j]) {
       j++
     } else {
@@ -76,6 +71,11 @@ function getIndexs(des, pattern) {
         // 再次优化，当有前缀时，i和j跳过前缀比较前缀后的字符
         j = next[j]
       }
+    }
+    if (j == plen) {
+      indexes.push(i)
+      j = 0
+      i += plen
     }
   }
   console.log('index backcount-->', backCount)
