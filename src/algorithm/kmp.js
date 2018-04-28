@@ -1,3 +1,10 @@
+/**
+ * 一个算法花费的时间与算法中语句的执行次数成正比，哪个算法中语句执行次数多，它花费时间就多
+ * 
+ * 所以kmp中j ==- 1的情况不需要拆分开来，因为虽然循环次数增加，但是它执行的语句次数是一样的
+ * 
+ * 然而getIndexs循环次数少，执行语句的次数也少，但由于循环体中的语句都比较简单，所以这两个方法的执行时间并没有什么差异
+ */
 function kmp(desStr, pattern) {
   let next = getNext(pattern),
     i = 0,
@@ -10,18 +17,14 @@ function kmp(desStr, pattern) {
 
   while (i < len) {
     count++
-    if (desStr[i] == pattern[j]) {
+    if (j == -1 || desStr[i] == pattern[j]) {
       i++;
       j++;
     } else {
       backCount++
       j = next[j];
     }
-    // 将j=-1的情况拆分，避免多次空循环
-    if (j == -1) {
-      i++
-      j++
-    } else if (j == jLen) {
+    if (j == jLen) {
       arr.push(i - j);
       j = 0;
     }
