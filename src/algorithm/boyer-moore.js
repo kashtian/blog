@@ -58,8 +58,9 @@ function goodSuffix(str) {
   let i = len - 2;
   let prefix = ''
   let arr = []
+  let j;
 
-  arr[i+1] = len
+  arr[len - 1] = len
 
   while (i >= 0) {
     prefix = str.slice(0, len - i - 1)
@@ -67,9 +68,25 @@ function goodSuffix(str) {
       arr[i] = i + 1
     } else {
       arr[i] = arr[i+1]
+    }    
+    i--
+  }
+
+  // 若好后缀有可以全部匹配的，则找到最靠右的匹配
+  i = len - 2;
+  while (i >= 0) {
+    j = i
+    while (j >= 0) {
+      if (str.slice(i+1) == str.slice(j-len+i+2, j+1)) {
+        arr[i] = i + 1 - (j-len+i+2)
+        break
+      } else {
+        j--
+      }
     }
     i--
   }
+
   arr[len - 1] = 0
 
   return arr
