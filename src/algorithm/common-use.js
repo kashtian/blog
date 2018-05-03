@@ -1,4 +1,4 @@
-// 冒泡排序
+// 冒泡排序（这个是选择排序的实现，不是冒泡排序，尴尬）
 function bubbleSort(a) {
   let j = 0
   let temp
@@ -60,6 +60,54 @@ function quickSort(a, start = 0, end) {
 }
 
 // 堆排序
+function heapSort(a) {
+  let count = 0
+  // 创建最小堆
+  function buildMinHeap(a) {
+    let len = a.length
+    for (let i = Math.ceil(len / 2) - 1; i >= 0; i--) {
+      minHeapUnit(a, i, len)
+    }
+    console.log('build min heap-->', a)
+  }
+
+  // 每层构建最小堆
+  function minHeapUnit(a, i, len) {
+    let temp = a[i]
+    let j = 2 * i + 1
+    while (j < len) {
+      count++
+      if (j + 1 < len && a[j + 1] < a[j]) {
+        j++
+      }
+      if (a[j] >= temp) {
+        break
+      }
+      a[i] = a[j]
+      i = j
+      j = 2 * i + 1
+    }
+    a[i] = temp
+    count++
+  }
+
+  // 删除最小堆
+  function deleteHeap(a) {
+    let len = a.length
+    let temp
+    for (let i = len - 1; i >= 1; i--) {
+      temp = a[0]
+      a[0] = a[i]
+      a[i] = temp
+      minHeapUnit(a, 0, i)
+    }
+  }
+
+  buildMinHeap(a)
+  deleteHeap(a)
+  console.log('heap sort count-->', count)
+  return a
+}
 
 // 二分查找
 
