@@ -1,5 +1,31 @@
-// 冒泡排序（这个是选择排序的实现，不是冒泡排序，尴尬）
+/**
+ * 冒泡排序（相邻元素比较交换）
+ * 与选择排序的差别：
+ * 循环次数一样，差别在于冒泡排序交换元素的次数，因为是两两交换，所以冒泡排序
+ * 交换元素次数通常大于选择排序
+ */
 function bubbleSort(a) {
+  let temp
+  let count = 0
+  let len = a.length
+  for (let i = len - 1; i > 0; i--) {
+    for (let j = 0; j < i; j++) {
+      count++
+      if (a[j] > a[j + 1]) {
+        temp = a[j]
+        a[j] = a[j + 1]
+        a[j + 1] = temp
+      }
+    }
+  }
+  console.log('bubble sort count-->', count)
+  return a
+}
+
+/**
+ * 选择排序（依次找出最小元素到当前位置）
+ */
+function selectSort(a) {
   let j = 0
   let temp
   let count = 0
@@ -14,11 +40,14 @@ function bubbleSort(a) {
       }
     }
   }
-  console.log('bubble sort count-->', count)
+  console.log('select sort count-->', count)
   return a
 }
 
-// 快速排序
+/**
+ * 快速排序，选择一个基准数，这里是第一个，从后向前找比基准数小的，交换，再从前向后找
+ * 比基准数大的，交换，直到i,j相遇，依次递归
+ */
 var qcount = 0
 function quickSort(a, start = 0, end) {
   if (typeof end == 'undefined') {
@@ -59,16 +88,18 @@ function quickSort(a, start = 0, end) {
   return a
 }
 
-// 堆排序
+/**
+ * 堆排序，此处建立最小堆，然后依次从堆顶拿出元素，再重建最小堆，直到元素拿完
+ */
 function heapSort(a) {
   let count = 0
   // 创建最小堆
   function buildMinHeap(a) {
     let len = a.length
-    for (let i = Math.ceil(len / 2) - 1; i >= 0; i--) {
+    for (let i = Math.floor(len / 2) - 1; i >= 0; i--) {
       minHeapUnit(a, i, len)
     }
-    console.log('build min heap-->', a)
+    console.log('build min heap-->', a, count)
   }
 
   // 每层构建最小堆
@@ -109,9 +140,114 @@ function heapSort(a) {
   return a
 }
 
-// 二分查找
+/**
+ * 计数排序，从数组a中找到最小值min，和最大值max，创建一个min-max下标的数组c,c里存储，a中对应该数字的个数，
+ * 最后将数组c里的下标i按c[i]的个数输出：c[0] = 4 ===> [0, 0, 0, 0]
+ */
 
-// 翻转二叉树
+/**
+ * 桶排序，比如基数排序里用到的0-9下标的桶数组b，个位比较时，将该数字放进其个位数1对应的b[1]里
+ */
+
+/**
+ * 基数排序(暂不实现，还要转换为字符串，分位数比较，麻烦)
+ * 原理：将整数按位数切割成不同的数字，不足则高位补0，然后按位（个，十，百...)分别比较，从低位到高位进行比较
+ */
+
+/**
+ * 插入排序，认为第一个元素有序，取出下一个元素，从后向前扫描有序数组，如果已排序的元素大于新元素，已排序元素向后
+ * 移一位，直到找到比新元素小的，将新元素插入其后
+ */
+
+/**
+ * 归并排序，将数组先递归到最小（一个），然后依次合并，合并时需要用到其他排序算法
+ */
+
+/**
+ * 二分查找,在有序数组的基础上，找到中间位置，比较，相等则返回位置，中间值小于k,则继续在前面数组查找，否则在中间值后的数组查找
+ * 尾调用优化（最后一步只调用函数没有其他操作）：只保留内层函数调用记录，不需要外层函数调用记录
+ */
+function binarySearch(a, k, l = 0, h) {
+  if (typeof h == 'undefined') {
+    h = a.length - 1
+  }
+  let mid = l + Math.ceil((h - l) / 2)
+  if (a[mid] == k) {
+    return mid
+  } else if (a[mid] < k) {
+    l = mid + 1
+  } else {
+    h = mid - 1
+  }
+  if (l > h) {
+    return -1
+  }
+  return binarySearch(a, k, l, h)
+}
+
+/**
+ * 二叉查找树（暂略）
+ */
+
+/**
+ * 翻转二叉树（链式结构才可以）
+ */
+function flipBinaryTree(node) {
+  if (!node) {
+    return
+  }
+  let temp
+  temp = node.left
+  node.left = node.right
+  node.right = temp
+  flipBinaryTree(node.left)
+  flipBinaryTree(node.right)
+}
+// 构造二叉树
+function createBinaryTree(a) {
+  let root = {value: a[0]}
+  let queue = [root]
+  let node
+  for (let i = 1, len = a.length; i < len; i++) {
+    node = queue[0]
+    if (!node.left) {
+      node.left = {value: a[i]}
+      queue.push(node.left)
+    } else if (!node.right) {
+      node.right = {value: a[i]}
+      queue.push(node.right)
+      queue.shift()
+    }
+  }
+  logBinaryTree(root, a.length)
+  return root
+}
+// 日志打出二叉树结构
+function logBinaryTree(tree, num) {
+  let queue = [tree]
+  let node
+  let i = 0
+  let count = 0
+  let str = ''
+  let level = Math.pow(2, Math.floor(num / 2) - 1)
+  while (queue.length > 0) {
+    node = queue.shift()
+    node.left && queue.push(node.left)
+    node.right && queue.push(node.right)
+    
+    str += node.value + ' '
+    count++
+    if (count == Math.pow(2, i) || count == (num - Math.pow(2, i) + 1)) {
+      for (let j = 0; j < (level - Math.pow(2, i)) / 2; j++) {
+        str = ' ' + str
+      }
+      console.log(str)
+      i++
+      count = 0
+      str = ''
+    }
+  }
+}
 
 // 树，先序
 
@@ -122,3 +258,7 @@ function heapSort(a) {
 // 树，bfs
 
 // 树，dfs
+
+/**
+ * 排列组合
+ */
