@@ -229,17 +229,20 @@ function logBinaryTree(tree, num) {
   let i = 0
   let count = 0
   let str = ''
-  let level = Math.pow(2, Math.floor(num / 2) - 1)
+  let maxLevel = Math.floor(Math.log(num) / Math.log(2))
+  let max = Math.pow(2, maxLevel)
   while (queue.length > 0) {
     node = queue.shift()
-    node.left && queue.push(node.left)
-    node.right && queue.push(node.right)
+    node && queue.push(node.left)
+    node && queue.push(node.right)
     
-    str += node.value + ' '
+    str += ' ' + (node && node.value || ' ') + ' '
     count++
-    if (count == Math.pow(2, i) || count == (num - Math.pow(2, i) + 1)) {
-      for (let j = 0; j < (level - Math.pow(2, i)) / 2; j++) {
-        str = ' ' + str
+    if (count == Math.pow(2, i)) {
+      if (i < maxLevel) {
+        for (let j = 0; j < (max - count)*3/2; j++) {
+          str = ' ' + str
+        }
       }
       console.log(str)
       i++
