@@ -236,7 +236,7 @@ function logBinaryTree(tree, num) {
     node && queue.push(node.left)
     node && queue.push(node.right)
     
-    str += ' ' + (node && node.value || ' ') + ' '
+    str += ' ' + (node ? node.value : ' ') + ' '
     count++
     if (count == Math.pow(2, i)) {
       if (i < maxLevel) {
@@ -252,15 +252,220 @@ function logBinaryTree(tree, num) {
   }
 }
 
-// 树，先序
+/**
+ * 二叉树，先序
+ */
+function preOrderRecursive(tree) {
+  preOrderRecursive.result = (preOrderRecursive.result || '') + ' ' + tree.value
+  if (tree.left) {
+    preOrderRecursive(tree.left)
+  }
+  if (tree.right) {
+    preOrderRecursive(tree.right)
+  }
+  return preOrderRecursive.result
+}
 
-// 树，后序
+function preOrderCycle(tree) {
+  let arr = [tree]
+  let node
+  let str = ''
+  
+  while(arr.length) {
+    node = arr.shift()
+    str += ' ' + node.value
+    if (node.right) {
+      arr.unshift(node.right)
+    }
+    if (node.left) {
+      arr.unshift(node.left)
+    }
+  }
+  console.log(str)
+}
 
-// 树，中序
+/**
+ * 二叉树，中序
+ */
+function inOrderRecursive(tree) {
+  if (tree.left) {
+    inOrderRecursive(tree.left)
+  }
+  inOrderRecursive.result = (inOrderRecursive.result || '') + ' ' + tree.value
+  if (tree.right) {
+    inOrderRecursive(tree.right)
+  }
+  return inOrderRecursive.result
+}
 
-// 树，bfs
+function inOrderCycle(tree) {
+  let arr = [tree]
+  let node
+  let visited = []
+  let str = ''
 
-// 树，dfs
+  while(arr.length) {
+    node = arr[0]
+
+    if ((node.left || node.right) && !visited.includes(node.left) && !visited.includes(node.right)) {
+      arr.shift()
+      if (node.right && !visited.includes(node.right)) {
+        arr.unshift(node.right)
+      }
+      arr.unshift(node)
+      if (node.left && !visited.includes(node.left)) {
+        arr.unshift(node.left)
+      }
+    } else {
+      visited.push(arr.shift())
+      str += ' ' + node.value
+    }
+  }
+  console.log(str)
+}
+
+// 中序非递归优化
+function inOrderCycleOptimize(root) {
+  let arr = []
+  let str = ''
+
+  while(arr.length || root) {
+    if (root) {
+      arr.push(root)
+      root = root.left
+    } else {
+      root = arr.pop()
+      str += ' ' + root.value
+      root = root.right
+    }
+  }
+  console.log(str)
+}
+
+/**
+ * 二叉树，后序
+ */
+function postOrderRecursive(tree) {
+  if (tree.left) {
+    postOrderRecursive(tree.left)
+  }
+  if (tree.right) {
+    postOrderRecursive(tree.right)
+  }
+  postOrderRecursive.result = (postOrderRecursive.result || '') + ' ' + tree.value
+  return postOrderRecursive.result
+}
+
+function postOrderCycle(tree) {
+  let arr = [tree]
+  let node
+  let visited = []
+  let str = ''
+
+  while(arr.length) {
+    node = arr[0]
+    if ((node.left || node.right) && !visited.includes(node.left) && !visited.includes(node.right)) {
+      if (node.right && !visited.includes(node.right)) {
+        arr.unshift(node.right)
+      }
+      if (node.left && !visited.includes(node.left)) {
+        arr.unshift(node.left)
+      }
+    } else {
+      visited.push(arr.shift())
+      str += ' ' + node.value
+    }
+  }
+  console.log(str)
+}
+
+// 一种逆序思想，先根右左的顺序遍历，再逆序就是后序遍历了
+function postOrderCycle2(root) {
+  let arr = [root]
+  let output = []
+  let str = ''
+
+  while(arr.length) {
+    root = arr.shift()
+    output.unshift(root)
+    if (root.left) {
+      arr.unshift(root.left)
+    }
+    if (root.right) {
+      arr.unshift(root.right)
+    }
+  }
+
+  output.forEach(item => {
+    str += ' ' + item.value
+  })
+  console.log(str)
+}
+
+/**
+ * 树，bfs
+ */
+function treeBFS(root) {
+  let queue = [root]
+  let str = ''
+
+  while(queue.length) {
+    root = queue.shift()
+    str += ' ' + root.value
+    if (root.children) {
+      root.children.forEach(child => {
+        queue.push(child)
+      })
+    }
+  }
+  console.log(str)
+}
+
+// 创建多叉树
+function createTree(tree, children) {
+  tree.children = []
+  children.forEach(item => {
+    tree.children.push({
+      value: item
+    })
+  })
+}
+
+/**
+ * 树，dfs
+ */
+function treeDFS(root) {
+  treeDFS.result = (treeDFS.result || '') + ' ' + root.value
+  if (root.children) {
+    root.children.forEach(child => {
+      treeDFS(child)
+    })
+  }
+  return treeDFS.result
+}
+
+function treeDFSCycle(root) {
+  let arr = [root]
+  let i = 0
+  let str = ''
+
+  while(arr.length) {
+    root = arr.pop()
+    str += ' ' + root.value
+    if (root.children) {
+      i = root.children.length - 1
+      while(i >= 0) {
+        arr.push(root.children[i])
+        i--
+      }
+    }
+  }
+  console.log(str)
+}
+
+ /**
+  * 图
+  */
 
 /**
  * 排列组合
