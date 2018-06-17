@@ -12,7 +12,13 @@ html,body {
 }
 
 #app {
-  height: 100%;
+  height: 100%; 
+  code,
+  pre {
+    display: block !important;
+    padding: 20pr 30pr !important;
+    background-color: #272822 !important;
+  }
 }
 
 // body {

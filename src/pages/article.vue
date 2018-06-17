@@ -8,7 +8,7 @@
       </div>
       <div class="date">{{getDate(article.updateAt)}}</div>
     </div>
-    <div class="ql-editor article-content" v-html="article.content"></div>
+    <div class="article-content" ref="article" v-html="article.content"></div>
   </div>
 </template>
 
@@ -37,6 +37,12 @@ export default {
     return store.dispatch('GET_ARTICLE', route.params)
   },
 
+  mounted() {
+    if (typeof window != 'undefined') {
+      Prism.highlightAllUnder(this.$refs.article)
+    }
+  },
+
   methods: {
     getDate(dateStr) {
       return tools.formatDate(new Date(dateStr), 'yyyy-MM-dd')
@@ -45,13 +51,11 @@ export default {
 }
 </script>
 
-<style src="quill/dist/quill.snow.css"></style>
-
 <style lang="less">
 .article-page {
   margin: 0px auto;
   height: 100%;
-  padding: 30pr 10%;
+  padding: 30pr 15%;
   background-color: #fefae7;
   box-sizing: border-box;
   overflow: auto;

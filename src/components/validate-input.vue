@@ -1,5 +1,5 @@
 <template>
-  <textarea v-if="type == 'textarea'"
+  <textarea class="input-class" v-if="type == 'textarea'"
     ref="el"
     :id="id"
     :name="name"
@@ -9,7 +9,7 @@
     v-model="curVal"
     @change="change">    
   </textarea>
-  <input v-else 
+  <input class="input-class" v-else 
     ref="el"
     :type="type"
     :id="id"
@@ -129,3 +129,9 @@ function setErrors(arr, obj) {
   }
 }
 </script>
+
+<style lang="less">
+  .input-class {
+    padding: 8pr;
+  }
+</style>

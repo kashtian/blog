@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import router from '../router'
 const { port } = require('../../config/sys.config')
 
 const fetchapi = options => {
@@ -14,8 +15,11 @@ const fetchapi = options => {
     }).then(res => {
       if (res.code == 200) {
         resolve(res)
+      } else if (res.code == 203) {
+        router.push('/login')
+      } else {        
+        reject(res)
       }
-      reject(res)
     }).catch(err => {
       reject(err)
     })

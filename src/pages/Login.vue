@@ -1,14 +1,16 @@
 <template>
   <div class="login-page">
-    <div>
-      <label>请输入用户名：</label>
-      <input class="input" type="text" v-model="info.name" />
-    </div>
-    <div>
-      <label>请输入密码：</label>
-      <input class="input" type="password" v-model="info.password" />
-    </div>
-    <button class="submit-btn" @click="submit">登录</button>
+    <form class="login-form">
+      <div class="form-row">
+        <label>请输入用户名：</label>
+        <input class="input" type="text" v-model="info.name" />
+      </div>
+      <div class="form-row">
+        <label>请输入密码：</label>
+        <input class="input" type="password" v-model="info.password" />
+      </div>
+      <button class="submit-btn" @click.prevent="submit">登录</button>
+    </form>
   </div>
 </template>
 
@@ -52,15 +54,32 @@ export default {
 
 <style lang="less">
 .login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  .login-form {
+    padding: 50pr;
+    background-color: #b1eefb;
+    border-radius: 10pr;
+    text-align: center;
+  }
+  .form-row {
+    margin-bottom: 20pr;
+  }
   .input {
+    padding: 8pr;
     border: 1px solid silver;
   }
   .submit-btn {
+    width: 300pr;
     margin-top: 20pr;
     padding: 10pr;
-    border: 1px solid pink;
+    background-color: pink;
+    border-radius: 8pr;
+    border: none;
+    outline: none;
   }
 }
 </style>
-
-

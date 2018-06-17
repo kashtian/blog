@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '../store'
+import router from '../router'
 
 let loadingCount = 0;
 
@@ -17,8 +18,11 @@ const fetchapi = options => {
       closeLoading()
       if (res.status == 200 && res.data.code == 200) {
         resolve(res.data)
-      } 
-      reject(res.data)
+      } else if (res.data.code == 203) {
+        router.push('/login')
+      } else {        
+        reject(res.data)
+      }
     }).catch(err => {
       closeLoading()
       reject(err)

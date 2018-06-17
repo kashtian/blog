@@ -105,7 +105,7 @@ export default {
 
 <style lang="less" scoped>
 .my-page {
-  padding: 0px 30pr;
+  padding: 30pr 20%;
   .article-item {
     margin-top: 20pr;
     display: flex;
