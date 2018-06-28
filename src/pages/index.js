@@ -5,6 +5,7 @@ import Login from './Login'
 import NotFound from './Not-found';
 import Article from './article'
 import My from './my'
+import Test from './test'
 
 export default {
   Home,
@@ -13,5 +14,6 @@ export default {
   Login,
   NotFound,
   Article,
-  My
+  My,
+  Test
 }
