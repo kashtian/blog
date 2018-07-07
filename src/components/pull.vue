@@ -1,10 +1,10 @@
 <template>
   <div class="pull-box">
-    <div class="refresh" :style="styleObj">{{topLabel}}</div>
+    <div class="refresh" v-if="topFn" :style="styleObj">{{topLabel}}</div>
     <div class="content" :style="styleObj" ref="content" @touchstart="start" @touchmove="move" @touchend="end">
       <slot></slot>
     </div>
-    <div class="load" :style="styleObj">{{bottomLabel}}</div>
+    <div class="load" v-if="bottomFn" :style="styleObj">{{bottomLabel}}</div>
   </div>
 </template>
 
@@ -12,14 +12,61 @@
 export default {
   name: 'pull',
 
+  props: {
+    topFn: Function,
+    bottomFn: Function,
+    options: Object,
+    noMore: Boolean
+  },
+
   data() {
     return {
       dis: 0,
-      minDis: 50,
-      maxDis: 150,
       styleObj: {},
-      topLabel: '下拉刷新',
-      bottomLabel: '上拉加载'
+      topLabel: '',
+      bottomLabel: '',
+      topStatus: '',
+      bottomStatus: '',
+      opts: Object.assign({
+        minDis: 50,
+        maxDis: 150,
+        topText: '下拉刷新',
+        topLoadingText: '加载中...',
+        topDropText: '释放刷新',
+        bottomText: '上拉加载',
+        bottomLoadingText: '加载中...',
+        bottomDropText: '释放加载',
+      }, this.options)
+    }
+  },
+
+  watch: {
+    topStatus(val) {
+      switch(val) {
+        case 'pull':
+          this.topLabel = this.opts.topText
+          break
+        case 'drop': 
+          this.topLabel = this.opts.topDropText
+          break
+        case 'loading':
+          this.topLabel = this.opts.topLoadingText
+          break
+      }
+    },
+
+    bottomStatus(val) {
+      switch(val) {
+        case 'pull':
+          this.bottomLabel = this.opts.bottomText
+          break
+        case 'drop': 
+          this.bottomLabel = this.opts.bottomDropText
+          break
+        case 'loading':
+          this.bottomLabel = this.opts.bottomLoadingText
+          break
+      }
     }
   },
 
@@ -35,22 +82,53 @@ export default {
     },
 
     move(event) {
+      if (this.topStatus == 'loading' || this.bottomStatus == 'loading') {
+        return
+      }
       let y = event.touches[0].pageY
-      if (!(this.isTop && y > this.y0 || (this.isBottom && y < this.y0))) {
+      if (!((this.isTop && y > this.y0 && this.topFn) || (this.isBottom && y < this.y0 && this.bottomFn && !this.noMore))) {
         return
       }
       event.preventDefault()
       this.dis = (y - this.y0) / 2
-      if (Math.abs(this.dis) > this.maxDis) {
-        this.dis = this.dis > 0 ? this.maxDis : -this.maxDis
+      if (Math.abs(this.dis) > this.opts.maxDis) {
+        this.dis = this.dis > 0 ? this.opts.maxDis : -this.opts.maxDis
       }
-      this.setLabel(Math.abs(this.dis))
+      this.setStauts(Math.abs(this.dis))
       this.setScroll()
     },
 
-    end() { 
+    end() {
+      if (this.dis == 0) {
+        return
+      }
+      if (this.isTop && this.topFn) {
+        if (Math.abs(this.dis) >= this.opts.minDis) {
+          this.topStatus = 'loading'
+          this.topFn()
+        } else {
+          this.reset()
+        }
+      }
+      if (this.isBottom && this.bottomFn) {
+        if (Math.abs(this.dis) >= this.opts.minDis) {
+          this.bottomStatus = 'loading'
+          this.bottomFn()
+        } else {
+          this.reset()
+        }
+      }
+    },
+
+    onLoaded() {
+      this.reset()
+    },
+
+    reset() {
       this.isTop = false
       this.isBottom = false
+      this.topStatus = ''
+      this.bottomStatus = ''
       this.dis = 0
       this.setScroll()
     },
@@ -61,19 +139,19 @@ export default {
       }
     },
 
-    setLabel(dis) {
+    setStauts(dis) {
       if (this.isTop) {
-        if (dis > this.minDis) {
-          this.topLabel = '释放刷新'
+        if (dis > this.opts.minDis) {
+          this.topStatus = 'drop'
         } else {
-          this.topLabel = '下拉刷新'
+          this.topStatus = 'pull'
         }
       }
       if (this.isBottom) {
-        if (dis > this.minDis) {
-          this.bottomLabel = '释放加载'
+        if (dis > this.opts.minDis) {
+          this.bottomStatus = 'drop'
         } else {
-          this.bottomLabel = '上拉加载'
+          this.bottomStatus = 'pull'
         }
       }
     }
