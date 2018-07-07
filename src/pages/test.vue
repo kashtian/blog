@@ -1,6 +1,6 @@
 <template>
   <div class="test-page">
-    <pull>
+    <pull ref="pull" :top-fn="refresh" :bottom-fn="loadmore" :no-more="nomore">
       <div class="item" v-for="(item, index) in arr" :key="index">
         {{item}}
       </div>
@@ -22,17 +22,48 @@ export default {
 
   data() {
     return {
-      arr: []
+      arr: [],
+      page: 1,
+      pageSize: 20,
+      nomore: false
     }
   },
 
-  created() {
-    let arr = []
-    for (let i = 0; i < 30; i++) {
-      arr.push(`test${i}`)
-    }
-    this.arr = arr
+  mounted() {
+    this.getList()
   },
+
+  methods: {
+    getList() {
+      let arr = []
+      for (let i = 1; i <= this.pageSize; i++) {
+        arr.push(`test${(this.page == 1 ? 0 : this.arr.length) + i}`)
+      }
+      setTimeout(() => {
+        if (this.page == 1) {
+          this.arr = arr
+        } else {
+          this.arr = this.arr.concat(arr)
+        }
+        if (this.arr.length > 50) {
+          this.nomore = true
+        } else {
+          this.nomore = false
+        }
+        this.$refs.pull.onLoaded()
+      }, 2000)
+    },
+
+    refresh() {
+      this.page = 1
+      this.getList()
+    },
+
+    loadmore() {
+      this.page++
+      this.getList()
+    }
+  }
 }
 </script>
 
@@ -48,7 +79,7 @@ export default {
     margin-bottom: 20pr;
     text-align: center;
     border-radius: 10pr;
-    box-shadow: 0px 0px 10pr rgba(0,0,0,0.2);
+    box-shadow: 0px 0px 10pr rgba(0, 0, 0, 0.2);
   }
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div class="pull-box">
-    <div class="refresh" v-if="topFn" :style="styleObj">{{topLabel}}</div>
-    <div class="content" :style="styleObj" ref="content" @touchstart="start" @touchmove="move" @touchend="end">
+    <div class="content" :style="styleObj" ref="content" @touchstart="start" @touchmove="move" @touchend="end" @scroll="scroll">
+      <div class="refresh" v-if="topFn">{{topLabel}}</div>
       <slot></slot>
+      <div class="load" v-if="bottomFn">{{bottomLabel}}</div>
     </div>
-    <div class="load" v-if="bottomFn" :style="styleObj">{{bottomLabel}}</div>
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
     topFn: Function,
     bottomFn: Function,
     options: Object,
-    noMore: Boolean
+    noMore: Boolean,
+    scrollLoad: Boolean
   },
 
   data() {
@@ -28,7 +29,7 @@ export default {
       topStatus: '',
       bottomStatus: '',
       opts: Object.assign({
-        minDis: 50,
+        minDis: 80,
         maxDis: 150,
         topText: '下拉刷新',
         topLoadingText: '加载中...',
@@ -42,6 +43,10 @@ export default {
 
   watch: {
     topStatus(val) {
+      if (!val) {
+        this.topLabel = ''
+        return
+      }
       switch(val) {
         case 'pull':
           this.topLabel = this.opts.topText
@@ -56,6 +61,10 @@ export default {
     },
 
     bottomStatus(val) {
+      if (!val) {
+        this.bottomLabel = ''
+        return
+      }
       switch(val) {
         case 'pull':
           this.bottomLabel = this.opts.bottomText
@@ -70,15 +79,21 @@ export default {
     }
   },
 
+  mounted() {
+    this.el = this.$refs.content
+  },
+
   methods: {
     start(event) {
-      let el = this.$refs.content
-      if (el.scrollTop == 0) {
-        this.isTop = true
-      } else if (el.scrollTop == (el.scrollHeight - el.offsetHeight)) {
-        this.isBottom = true
-      }
-      this.y0 = event.touches[0].pageY   
+      this.y0 = event.touches[0].pageY
+    },
+
+    isTop(y) {
+      return this.el.scrollTop == 0 && y > this.y0 && this.topFn
+    },
+
+    isBottom(y) {
+      return this.el.scrollTop == (this.el.scrollHeight - this.el.offsetHeight) && y < this.y0 && this.bottomFn && !this.noMore
     },
 
     move(event) {
@@ -86,7 +101,7 @@ export default {
         return
       }
       let y = event.touches[0].pageY
-      if (!((this.isTop && y > this.y0 && this.topFn) || (this.isBottom && y < this.y0 && this.bottomFn && !this.noMore))) {
+      if (!(this.isTop(y) || this.isBottom(y))) {
         return
       }
       event.preventDefault()
@@ -94,28 +109,40 @@ export default {
       if (Math.abs(this.dis) > this.opts.maxDis) {
         this.dis = this.dis > 0 ? this.opts.maxDis : -this.opts.maxDis
       }
-      this.setStauts(Math.abs(this.dis))
+      this.setStauts(this.dis)
       this.setScroll()
     },
 
     end() {
-      if (this.dis == 0) {
-        return
-      }
-      if (this.isTop && this.topFn) {
-        if (Math.abs(this.dis) >= this.opts.minDis) {
+      if (this.topFn && this.dis > 0) {
+        if (this.dis >= this.opts.minDis) {
           this.topStatus = 'loading'
+          this.dis = 30
+          this.setScroll()
           this.topFn()
         } else {
           this.reset()
         }
       }
-      if (this.isBottom && this.bottomFn) {
-        if (Math.abs(this.dis) >= this.opts.minDis) {
+      if (this.bottomFn && this.dis < 0) {
+        if (!this.scrollLoad && Math.abs(this.dis) >= this.opts.minDis) {
           this.bottomStatus = 'loading'
+          this.dis = -30
+          this.setScroll()
           this.bottomFn()
         } else {
           this.reset()
+        }
+      }
+    },
+
+    scroll() {
+      if (this.el.scrollTop == (this.el.scrollHeight - this.el.offsetHeight)) {
+        if (this.bottomFn && this.scrollLoad && !this.noMore && this.bottomStatus != 'loading') {
+          this.bottomStatus = 'loading'
+          this.dis = -30
+          this.setScroll()
+          this.bottomFn()
         }
       }
     },
@@ -125,8 +152,6 @@ export default {
     },
 
     reset() {
-      this.isTop = false
-      this.isBottom = false
       this.topStatus = ''
       this.bottomStatus = ''
       this.dis = 0
@@ -135,20 +160,21 @@ export default {
 
     setScroll() {
       this.styleObj = {
-        transform: `translateY(${this.dis}px)`
+        transform: `translateY(${this.dis}px)`,
+        overflow: this.dis > 0 ? 'visible' : 'auto'
       }
     },
 
     setStauts(dis) {
-      if (this.isTop) {
-        if (dis > this.opts.minDis) {
+      if (dis > 0) {
+        if (dis >= this.opts.minDis) {
           this.topStatus = 'drop'
         } else {
           this.topStatus = 'pull'
         }
       }
-      if (this.isBottom) {
-        if (dis > this.opts.minDis) {
+      if (dis < 0) {
+        if (Math.abs(dis) >= this.opts.minDis) {
           this.bottomStatus = 'drop'
         } else {
           this.bottomStatus = 'pull'
@@ -162,25 +188,18 @@ export default {
 <style lang="less">
 .pull-box {
   flex: 1;
-  position: relative;
   overflow: hidden;
-  .refresh {
-    position: absolute;
-    width: 100%;
-    height: 40pr;
-    top: 0px;
-    left: 0px;
-    margin-top: -40pr;
+  .refresh, .load {    
+    height: 30px;
+    line-height: 30px;
     text-align: center;
+    font-size: 12px;
+  }
+  .refresh {
+    margin-top: -30px;
   }
   .load {
-    position: absolute;
-    width: 100%;
-    height: 40pr;
-    margin-bottom: -40pr;
-    bottom: 0px;
-    left: 0px;
-    text-align: center;
+    margin-bottom: -30px;
   }
   .content {
     height: 100%;
