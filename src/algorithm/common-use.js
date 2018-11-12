@@ -160,8 +160,28 @@ function heapSort(a) {
  */
 
 /**
- * 归并排序，将数组先递归到最小（一个），然后依次合并，合并时需要用到其他排序算法
+ * 归并排序，将数组先递归到最小（一个），然后依次合并
  */
+function guibing(a) {
+  function merge(left, right) {
+    let final = []
+    while(left.length && right.length) {
+      final.push(left[0] <= right[0] ? left.shift() : right.shift())
+    }
+    return final.concat(left.concat(right))
+  }
+
+  function gbsort(a) {
+    let len = a.length
+    if (len < 2) {
+      return a
+    }
+    let mid = Math.floor(len / 2)
+    return merge(gbsort(a.slice(0, mid)), gbsort(a.slice(mid)))
+  }
+
+  return gbsort(a)
+}
 
 /**
  * 二分查找,在有序数组的基础上，找到中间位置，比较，相等则返回位置，中间值小于k,则继续在前面数组查找，否则在中间值后的数组查找
