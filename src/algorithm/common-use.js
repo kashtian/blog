@@ -54,7 +54,7 @@ function quickSort(a, start = 0, end) {
     end = a.length - 1
   }
   if (start >= end) {
-    qcount++
+    console.log('quickSort count-->', qcount)
     return
   }
   let j = end
@@ -66,7 +66,6 @@ function quickSort(a, start = 0, end) {
       j--
     }
     if (i < j) {
-      qcount++
       a[i] = a[j]
       i++
     }
@@ -75,7 +74,6 @@ function quickSort(a, start = 0, end) {
       i++
     }
     if (i < j) {
-      qcount++
       a[j] = a[i]
       j--
     }
@@ -84,8 +82,28 @@ function quickSort(a, start = 0, end) {
   a[i] = x
   quickSort(a, start, i - 1)
   quickSort(a, i + 1, end)
-  console.log('quickSort count-->', qcount)
   return a
+}
+
+// 快速排序占空间的另一种写法
+function qsbase(arr) {
+  let len = arr.length
+  if (len < 2) {
+    return arr
+  }
+  let left = []
+  let right = []
+  let base = arr[0]
+  let item = null
+  for (let i = 1; i < len; i++) {
+    item = arr[i]
+    if (item < base) {
+      left.push(item)
+    } else {
+      right.push(item)
+    }
+  }
+  return qsbase(left).concat(base, qsbase(right))
 }
 
 /**
