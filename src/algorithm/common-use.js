@@ -176,6 +176,24 @@ function heapSort(a) {
  * 插入排序，认为第一个元素有序，取出下一个元素，从后向前扫描有序数组，如果已排序的元素大于新元素，已排序元素向后
  * 移一位，直到找到比新元素小的，将新元素插入其后
  */
+function insertionSort(array) {
+  var item
+  var temp
+
+  for (var i = 1, len = array.length; i < len; i++) {
+    item = array[i]
+    for (var j = i - 1; j >= 0; j--) {
+      temp = array[j]
+      if (temp > item) {
+        array[j + 1] = temp
+      } else {
+        break
+      }
+    }
+    array[j + 1] = item
+  }
+  return array
+}
 
 /**
  * 归并排序，将数组先递归到最小（一个），然后依次合并
