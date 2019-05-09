@@ -24,24 +24,24 @@ function bubbleSort(a) {
 
 /**
  * 选择排序（依次找出最小元素到当前位置）
+ * 元素最大交换次数为n-1次，比较次数n^2
  */
-function selectSort(a) {
-  let j = 0
-  let temp
-  let count = 0
-
-  for (let i = 0, len = a.length; i < len - 1; i++) {
-    for (j = i + 1; j < len; j++) {
-      count++
-      if (a[i] > a[j]) {
-        temp = a[i]
-        a[i] = a[j]
-        a[j] = temp
+function selectionSort(arr) {
+  let pos, temp
+  for (let i = 0, len = arr.length; i < len - 1; i++) {
+    pos = i
+    for (let j = i + 1; j < len; j++) {
+      if (arr[j] < arr[pos]) {
+        pos = j
       }
     }
+    if (pos != i) {
+      temp = arr[pos]
+      arr[pos] = arr[i]
+      arr[i] = temp
+    }
   }
-  console.log('select sort count-->', count)
-  return a
+  return arr
 }
 
 /**
