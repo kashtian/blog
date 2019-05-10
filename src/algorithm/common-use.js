@@ -106,6 +106,23 @@ function qsbase(arr) {
   return qsbase(left).concat(base, qsbase(right))
 }
 
+// 插入排序(通过构建有序数列，对于未排序的数据，在已排序序列中从后往前扫描，找到相应位置并插入)
+function insertSort(arr) {
+  let index = 0
+  let temp
+  let item
+  for (let i = 1, len = arr.length; i < len; i++) {
+    item = arr[i]
+    index = i - 1
+    while(index > -1 && item < arr[index]) {
+      arr[index + 1] = arr[index]
+      index--
+    }
+    arr[index + 1] = item
+  }
+  return arr
+}
+
 /**
  * 堆排序，此处建立最小堆，然后依次从堆顶拿出元素，再重建最小堆，直到元素拿完
  */
