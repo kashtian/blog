@@ -90,14 +90,14 @@ function getIndexs(des, pattern) {
 
 // 优化后的next数组求解
 function getNext(str) {
-  let k = -1;
-  let next = [-1];
+  let k = -1; // next数组的值，表示前后缀公共长度值
+  let next = [-1]; // next数组的值，存放的是前后缀公共长度值，只有字符失配时会用到next的值
   let i = 0;
 
   while (i < str.length - 1) {
     if (str[i] == str[k] || k == -1) {
       next[++i] = ++k
-      // 优化
+      // 优化点在于： 如果当前字符失配，它的公共前缀处的字符若与它相等必然也失配，故将此值替换成公共前缀处的长度值
       if (str[i] == str[k]) {
         next[i] = next[k]
       }
