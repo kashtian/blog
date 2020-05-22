@@ -214,6 +214,8 @@ function insertionSort(array) {
 
 /**
  * 归并排序，将数组先递归到最小（一个），然后依次合并
+ * 归并的难点也在merge函数，通过两数组间头部元素的比较，合并为有序数组
+ * 通过比较对数组头部元素的删除，保证头部元素始终是数组的最小值
  */
 function guibing(a) {
   function merge(left, right) {
