@@ -1,6 +1,6 @@
 <template>
   <div class="pull-box">
-    <div class="content" :style="styleObj" ref="content" @touchstart="start" @touchmove="move" @touchend="end" @scroll="scroll">
+    <div class="content" :style="styleObj">
       <div class="refresh" v-if="topFn">{{topLabel}}</div>
       <slot></slot>
       <div class="load" v-if="bottomFn">{{bottomLabel}}</div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'pull',
+  name: 'loadmore',
 
   props: {
     topFn: Function,
@@ -36,7 +36,7 @@ export default {
         topDropText: '释放刷新',
         bottomText: '上拉加载',
         bottomLoadingText: '加载中...',
-        bottomDropText: '释放加载',
+        bottomDropText: '释放加载'
       }, this.options)
     }
   },
@@ -47,11 +47,11 @@ export default {
         this.topLabel = ''
         return
       }
-      switch(val) {
+      switch (val) {
         case 'pull':
           this.topLabel = this.opts.topText
           break
-        case 'drop': 
+        case 'drop':
           this.topLabel = this.opts.topDropText
           break
         case 'loading':
@@ -65,11 +65,11 @@ export default {
         this.bottomLabel = ''
         return
       }
-      switch(val) {
+      switch (val) {
         case 'pull':
           this.bottomLabel = this.opts.bottomText
           break
-        case 'drop': 
+        case 'drop':
           this.bottomLabel = this.opts.bottomDropText
           break
         case 'loading':
@@ -80,20 +80,79 @@ export default {
   },
 
   mounted() {
-    this.el = this.$refs.content
+    this.scrollTarget = this.getScrollTarget(this.$el)
+    this.bindEvents()
+  },
+
+  beforeDestroy() {
+    this.removeEvents()
   },
 
   methods: {
-    start(event) {
-      this.y0 = event.touches[0].pageY
+    // 绑定相应事件
+    bindEvents() {
+      if (this.scrollLoad) {
+        this.scrollTarget.addEventListener('scroll', this.scroll)
+      } else {
+        this.$el.addEventListener('touchstart', this.start)
+        this.$el.addEventListener('touchmove', this.move)
+        this.$el.addEventListener('touchend', this.end)
+      }
+    },
+
+    // 移除相应事件
+    removeEvents() {
+      if (this.scrollLoad) {
+        this.scrollTarget.removeEventListener('scroll', this.scroll)
+      } else {
+        this.$el.removeEventListener('touchstart', this.start)
+        this.$el.removeEventListener('touchmove', this.move)
+        this.$el.removeEventListener('touchend', this.end)
+      }
     },
 
     isTop(y) {
-      return this.el.scrollTop == 0 && y > this.y0 && this.topFn
+      return this.getScrollTop() == 0 && y > this.y0 && this.topFn
     },
 
     isBottom(y) {
-      return this.el.scrollTop == (this.el.scrollHeight - this.el.offsetHeight) && y < this.y0 && this.bottomFn && !this.noMore
+      return this.checkBottomReached() && y < this.y0 && this.bottomFn && !this.noMore
+    },
+
+    // 检查元素是否已经滚动到底部
+    checkBottomReached() {
+      if (this.scrollTarget === window) {
+        return this.getScrollTop() === document.documentElement.scrollHeight - document.documentElement.clientHeight
+      } else {
+        return this.$el.getBoundingClientRect().bottom <= this.scrollTarget.getBoundingClientRect().bottom + 1
+      }
+    },
+
+    // 获取真正的滚动元素，直到查找到body
+    getScrollTarget(el) {
+      let currentNode = el
+      while (currentNode && currentNode.tagName !== 'BODY' && currentNode.nodeType === 1) {
+        let overflowY = window.getComputedStyle(currentNode).overflowY
+        if (overflowY === 'scroll' || overflowY === 'auto') {
+          return currentNode
+        }
+        currentNode = currentNode.parentNode
+      }
+      // 返回window, 好绑定scroll事件
+      return window
+    },
+
+    // 获取滚动元素的scrollTop
+    getScrollTop() {
+      if (this.scrollTarget === window) {
+        return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+      } else {
+        return this.scrollTarget.scrollTop
+      }
+    },
+
+    start(event) {
+      this.y0 = event.touches[0].pageY
     },
 
     move(event) {
@@ -137,13 +196,11 @@ export default {
     },
 
     scroll() {
-      if (this.el.scrollTop == (this.el.scrollHeight - this.el.offsetHeight)) {
-        if (this.bottomFn && this.scrollLoad && !this.noMore && this.bottomStatus != 'loading') {
-          this.bottomStatus = 'loading'
-          this.dis = -30
-          this.setScroll()
-          this.bottomFn()
-        }
+      if (this.scrollLoad && this.bottomFn && !this.noMore && this.bottomStatus != 'loading' && this.checkBottomReached()) {
+        this.bottomStatus = 'loading'
+        this.dis = -30
+        this.setScroll()
+        this.bottomFn()
       }
     },
 
@@ -160,8 +217,7 @@ export default {
 
     setScroll() {
       this.styleObj = {
-        transform: `translateY(${this.dis}px)`,
-        overflow: this.dis > 0 ? 'visible' : 'auto'
+        transform: this.dis === 0 ? null : `translateY(${this.dis}px)`
       }
     },
 
@@ -187,9 +243,9 @@ export default {
 
 <style lang="less">
 .pull-box {
-  flex: 1;
   overflow: hidden;
-  .refresh, .load {    
+  .refresh,
+  .load {
     height: 30px;
     line-height: 30px;
     text-align: center;
@@ -200,10 +256,6 @@ export default {
   }
   .load {
     margin-bottom: -30px;
-  }
-  .content {
-    height: 100%;
-    overflow: auto;
   }
 }
 </style>
